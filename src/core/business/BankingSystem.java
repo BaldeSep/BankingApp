@@ -18,4 +18,8 @@ public class BankingSystem {
 	public boolean verifyUserCredentials(String userName, String password) {
 		return userDAO.verifyUserCredentials(userName, password);
 	}
+
+	public boolean createBankAccount(String userName) {
+		return userDAO.createBankAccount(userName);
+	}
 }

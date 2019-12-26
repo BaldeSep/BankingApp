@@ -62,6 +62,28 @@ public class UserDAO {
 		
 		return userExists;
 	}
+
+	public boolean createBankAccount(final String userName) {
+		boolean createdAccount = false;
+		
+		try(Connection connection = OracleDBConnection.getInstance()){
+			// Create SQL Statement
+			String insertBankAccount = "INSERT INTO BANKACCOUNTS (holder) VALUES (?)";
+			PreparedStatement insertBankAccountStatement = connection.prepareStatement(insertBankAccount);
+			insertBankAccountStatement.setString(1, userName);
+			// Execute Statement
+			int count = insertBankAccountStatement.executeUpdate();
+			if(count > 0) {
+				createdAccount = true;
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		
+		return createdAccount;
+	}
 	
 	
 	
