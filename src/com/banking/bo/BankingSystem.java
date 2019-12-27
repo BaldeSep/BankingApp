@@ -67,4 +67,8 @@ public class BankingSystem {
 		
 		
 	}
+
+	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException {
+		return bankAccountDAO.makeWithdrawal(accountNumber, amountToWithdrawal);
+	}
 }

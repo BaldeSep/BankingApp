@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.banking.bo.BankAccount;
 import com.banking.bo.RequestTicket;
+import com.banking.exception.BankingSystemException;
 import com.banking.util.OracleDBConnection;
 
 public class BankAccountDAO {
@@ -167,6 +168,41 @@ public class BankAccountDAO {
 			log.error(e);
 		}
 		return depositSuccess;
+	}
+
+	public double makeWithdrawal(int accountNumber, double amountToWithdrawal) throws BankingSystemException {
+		double moneyWithdrawn = 0.00;
+		try(Connection connection = OracleDBConnection.getInstance()){
+			String queryAccount = "Select balance From BankAccounts Where account_number = ?";
+			PreparedStatement getBalanceStatement = connection.prepareStatement(queryAccount);
+			getBalanceStatement.setInt(1, accountNumber);
+			ResultSet accountSet = getBalanceStatement.executeQuery();
+			double oldBalance = 0.00;
+			if(accountSet.next()) {
+				oldBalance = accountSet.getDouble("balance");
+			}else {
+				throw new BankingSystemException("Bank Account Could Not Be Found With Given Account Number: " + accountNumber );
+			}
+			double newBalance = oldBalance - amountToWithdrawal;
+			if(newBalance < 0) {
+				throw new BankingSystemException("Amount Withdrawn Exceeds Available Funds");
+			}
+			String updateBalance = "Update BankAccounts Set balance = ? Where account_number = ?";
+			PreparedStatement updateBalanceStatement = connection.prepareStatement(updateBalance);
+			updateBalanceStatement.setDouble(1, newBalance);
+			updateBalanceStatement.setInt(2, accountNumber);
+			int updatedCount = updateBalanceStatement.executeUpdate();
+			if(updatedCount == 1) {
+				moneyWithdrawn = amountToWithdrawal;
+			}else {
+				throw new BankingSystemException("Error Removing Funds With Account");
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		return moneyWithdrawn;
 	}
 	
 	

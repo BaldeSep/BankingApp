@@ -7,18 +7,19 @@ import org.junit.Test;
 import com.banking.bo.BankingSystem;
 import com.banking.exception.BankingSystemException;
 
-public class MakingDepositTest {
+public class MakeWithdrawalTest {
 	@Test
-	public void makeDeposit(){
+	public void makeWithdrawal(){
 		BankingSystem system = BankingSystem.getInstance();
-		int accountNumber = 400;
-		double amount = 2345.23;
-		boolean successful = false;
-		try {
-			successful = system.makeDeposit(accountNumber, amount);			
+		int accountNumber = 4;
+		double amountToWithdrawal = 150.00;
+		double money = 0.00;
+		try{
+			money = system.makeWithdrawal(accountNumber, amountToWithdrawal);
 		}catch(BankingSystemException e) {
 			System.out.println(e);
 		}
-		assertEquals(true, successful);
+		System.out.println(money);
+		assertEquals(false, money == 0.00);
 	}
 }
