@@ -57,4 +57,31 @@ public class BankAccountDAO {
 		
 		return createdAccount;
 	}
+	
+	public boolean applyForBankAccount(RequestTicket ticket) {
+		boolean applicationSent = false;
+		
+		try(Connection connection = OracleDBConnection.getInstance()){
+			String userName = ticket.getUserName();
+			double defaultBalance =  ticket.getInitialBalance();
+			String sql = "Insert Into RequestTicket(user_name, default_balance) Values(?, ?)";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, userName);
+			if(defaultBalance < 0) {
+				statement.setDouble(2, 0.00);				
+			}else {
+				statement.setDouble(2, defaultBalance);				
+			}
+			int count = statement.executeUpdate();
+			if(count > 0) {
+				applicationSent = true;
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		
+		return applicationSent;
+	}
 }

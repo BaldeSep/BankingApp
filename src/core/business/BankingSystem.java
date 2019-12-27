@@ -1,5 +1,8 @@
 package core.business;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class BankingSystem {
 	private static final BankingSystem bankingSystem = new BankingSystem();
 	private UserDAO userDAO;
@@ -27,5 +30,13 @@ public class BankingSystem {
 	
 	public boolean createBankAccount(final String userName,final double initialBalance ) {
 		return bankAccountDAO.createBankAccount(userName, initialBalance);
+	}
+
+	public RequestTicket generateRequestTicket(final String userName, final double balance) {
+		return new RequestTicket(userName, balance);
+	}
+
+	public boolean applyForBankAccount(final RequestTicket ticket) {
+		return bankAccountDAO.applyForBankAccount(ticket);
 	}
 }
