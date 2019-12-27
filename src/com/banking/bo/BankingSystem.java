@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.banking.bo.types.UserType;
 import com.banking.dao.BankAccountDAO;
+import com.banking.dao.MoneyTransferDAO;
 import com.banking.dao.UserDAO;
 import com.banking.exception.BankingSystemException;
 
@@ -14,9 +15,11 @@ public class BankingSystem {
 	private String currentUser;
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
+	private MoneyTransferDAO moneyTransferDAO;
 	private BankingSystem() {
 		userDAO = new UserDAO();
 		bankAccountDAO = new BankAccountDAO();
+		moneyTransferDAO = new MoneyTransferDAO();
 	}
 	
 	public static BankingSystem getInstance() {
@@ -70,5 +73,12 @@ public class BankingSystem {
 
 	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException {
 		return bankAccountDAO.makeWithdrawal(accountNumber, amountToWithdrawal);
+	}
+
+	public boolean postMoneyTransfer(final int sourceAccountNumber, final int destinationAccountNumber, final double amount) throws BankingSystemException {
+		if(amount < 0) {
+			throw new BankingSystemException("Invalid Transfer Amount, Must Be Greater Than Or Equal To $0.00");
+		}
+		return moneyTransferDAO.postMoneyTransfer(sourceAccountNumber, destinationAccountNumber, amount);
 	}
 }
