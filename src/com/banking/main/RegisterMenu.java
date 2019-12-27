@@ -1,6 +1,10 @@
 package com.banking.main;
 
+import java.io.BufferedReader;
+
 import org.apache.log4j.Logger;
+
+import com.banking.util.MenuHelper;
 
 public class RegisterMenu implements Menu {
 	private static final Logger log = Logger.getLogger(RegisterMenu.class);
@@ -13,12 +17,10 @@ public class RegisterMenu implements Menu {
 	}
 	@Override
 	public void presentMenu() {
-		// TODO Auto-generated method stub
-		System.out.println("Register Here");
+		System.out.println("Register User Here");
 	}
 
 	public void switchMenu(int option) {
-		// TODO Auto-generated method stub
 		System.out.println("Register Switch Menus Here");
 	}
 

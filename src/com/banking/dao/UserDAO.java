@@ -65,7 +65,4 @@ public class UserDAO {
 		
 		return userExists;
 	}
-	
-	
-	
 }

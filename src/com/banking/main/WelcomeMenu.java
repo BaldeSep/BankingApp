@@ -39,15 +39,7 @@ public class WelcomeMenu implements Menu {
 		Map<Integer, Menu> nextMenus = getNextMenus();
 		for(WelcomeMenuOptions menuOption: welcomeMenuOptions) {
 			if(userSelection ==  menuOption.ordinal() ) {
-				switch(menuOption) {
-				case QUIT:
-					log.info("Program Shutting Down Goodbye");
-					System.exit(0);
-					break;
-				default:
-					nextMenus.get(menuOption.ordinal()).presentMenu();
-					break;
-				}
+				nextMenus.get(menuOption.ordinal()).presentMenu();
 			}
 		}
 	}
@@ -63,7 +55,7 @@ public class WelcomeMenu implements Menu {
 				nextMenus.put(option.ordinal(), RegisterMenu.getInstance());
 				break;
 			case QUIT:
-				nextMenus.put(option.ordinal(), null);
+				nextMenus.put(option.ordinal(), QuitMenu.getInstance());
 				break;
 			}
 		}

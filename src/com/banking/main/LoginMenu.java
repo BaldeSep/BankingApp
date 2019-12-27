@@ -46,8 +46,7 @@ public class LoginMenu implements Menu{
 					nextMenus.get(option.ordinal()).presentMenu();
 					break;
 				case QUIT:
-					log.info("Program Shutting Down Goodbye");
-					System.exit(0);
+					nextMenus.get(option.ordinal()).presentMenu();
 					break;
 				}
 			}
@@ -65,7 +64,7 @@ public class LoginMenu implements Menu{
 				nextMenus.put(option.ordinal(), WelcomeMenu.getInstance());
 				break;
 			case QUIT:
-				nextMenus.put(option.ordinal(), null);
+				nextMenus.put(option.ordinal(), QuitMenu.getInstance());
 				break;
 			}
 		}

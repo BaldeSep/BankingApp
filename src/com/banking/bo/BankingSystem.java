@@ -2,6 +2,7 @@ package com.banking.bo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import com.banking.bo.types.UserType;
 import com.banking.dao.BankAccountDAO;
@@ -9,6 +10,7 @@ import com.banking.dao.UserDAO;
 
 public class BankingSystem {
 	private static final BankingSystem bankingSystem = new BankingSystem();
+	private String currentUser;
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
 	public BankingSystem() {
@@ -25,7 +27,11 @@ public class BankingSystem {
 	}
 	
 	public boolean verifyUserCredentials(final String userName, final String password) {
-		return userDAO.verifyUserCredentials(userName, password);
+		if(userDAO.verifyUserCredentials(userName, password)) {
+			currentUser = userName;
+			return true;
+		}
+		return false;
 	}
 
 	public boolean createBankAccount(final String userName) {
@@ -42,5 +48,9 @@ public class BankingSystem {
 
 	public boolean applyForBankAccount(final RequestTicket ticket) {
 		return bankAccountDAO.applyForBankAccount(ticket);
+	}
+
+	public List<BankAccount> getAccounts(final String userName) {
+		return bankAccountDAO.getAccounts(userName);
 	}
 }

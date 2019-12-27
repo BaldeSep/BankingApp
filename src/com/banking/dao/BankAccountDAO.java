@@ -2,10 +2,14 @@ package com.banking.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.BankAccount;
 import com.banking.bo.RequestTicket;
 import com.banking.util.OracleDBConnection;
 
@@ -86,5 +90,27 @@ public class BankAccountDAO {
 		}
 		
 		return applicationSent;
+	}
+
+	public List<BankAccount> getAccounts(String userName) {
+		List<BankAccount> accounts = new ArrayList<>();
+		try(Connection connection = OracleDBConnection.getInstance()){
+			String sql = "Select account_number, holder, balance From BankAccounts Where holder = ?";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, userName);
+			ResultSet resultAccounts = statement.executeQuery();
+			while(resultAccounts.next()) {
+				BankAccount account = new BankAccount();
+				account.setAccountNumber(resultAccounts.getInt("account_number"));
+				account.setHolder(resultAccounts.getString("holder"));
+				account.setBalance(resultAccounts.getDouble("balance"));
+				accounts.add(account);
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		return accounts;
 	}
 }
