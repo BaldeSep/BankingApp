@@ -113,4 +113,33 @@ public class BankAccountDAO {
 		}
 		return accounts;
 	}
+
+	public BankAccount getAccount(int accountNumber) {
+		List<BankAccount> accounts = new ArrayList<>();
+		BankAccount account = null;
+		try(Connection connection = OracleDBConnection.getInstance()){
+			String sql = "Select account_number, holder, balance From BankAccounts Where account_number = ?";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, accountNumber);
+			ResultSet resultAccounts =  statement.executeQuery();
+			
+			while(resultAccounts.next()) {
+				BankAccount newAccount= new BankAccount();
+				newAccount.setAccountNumber(resultAccounts.getInt("account_number"));
+				newAccount.setBalance(resultAccounts.getDouble("balance"));
+				newAccount.setHolder(resultAccounts.getString("holder"));
+				accounts.add(newAccount);
+			}
+			if(accounts.size() == 1) {
+				account = accounts.get(0);
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		return account;
+	}
+	
+	
 }

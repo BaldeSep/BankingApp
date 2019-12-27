@@ -8,4 +8,5 @@ public class Init {
 		Menu initialMenu = WelcomeMenu.getInstance();
 		initialMenu.presentMenu();
 	}
+	
 }

@@ -53,4 +53,8 @@ public class BankingSystem {
 	public List<BankAccount> getAccounts(final String userName) {
 		return bankAccountDAO.getAccounts(userName);
 	}
+
+	public BankAccount getAccount(final int accountNumber) {
+		return bankAccountDAO.getAccount(accountNumber);
+	}
 }
