@@ -81,4 +81,8 @@ public class BankingSystem {
 		}
 		return moneyTransferDAO.postMoneyTransfer(sourceAccountNumber, destinationAccountNumber, amount);
 	}
+
+	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) {
+		return moneyTransferDAO.viewMoneyTransfers(destinationUserName);
+	}
 }

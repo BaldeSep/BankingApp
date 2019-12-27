@@ -38,4 +38,12 @@ public class MoneyTransfer {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
+
+	@Override
+	public String toString() {
+		return "MoneyTransfer [sourceAccountNumber=" + sourceAccountNumber + ", destinationAccountNumber="
+				+ destinationAccountNumber + ", amount=" + amount + "]";
+	}
+	
+	
 }
