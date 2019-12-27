@@ -140,6 +140,34 @@ public class BankAccountDAO {
 		}
 		return account;
 	}
+
+	public boolean makeDeposit(int accountNumber, double amount){
+		boolean depositSuccess = false;
+		try(Connection connection = OracleDBConnection.getInstance()){
+			String selectAccount = "Select balance From BankAccounts Where account_number = ?";
+			PreparedStatement getBalanceStatement = connection.prepareStatement(selectAccount);
+			getBalanceStatement.setInt(1, accountNumber);
+			ResultSet accountBalanceSet = getBalanceStatement.executeQuery();
+			double oldBalance = 0.00;
+			if(accountBalanceSet.next()) {
+				oldBalance = accountBalanceSet.getDouble("balance");
+			}
+			double newBalance = oldBalance + amount;
+			String addNewBalance = "Update BankAccounts Set balance = ? Where account_number = ? ";
+			PreparedStatement updateBalanceStatement = connection.prepareStatement(addNewBalance);
+			updateBalanceStatement.setDouble(1, newBalance);
+			updateBalanceStatement.setInt(2, accountNumber);
+			int updatedRows = updateBalanceStatement.executeUpdate();
+			if(updatedRows == 1) {
+				depositSuccess = true;
+			}
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		return depositSuccess;
+	}
 	
 	
 }

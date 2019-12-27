@@ -7,13 +7,14 @@ import java.util.List;
 import com.banking.bo.types.UserType;
 import com.banking.dao.BankAccountDAO;
 import com.banking.dao.UserDAO;
+import com.banking.exception.BankingSystemException;
 
 public class BankingSystem {
 	private static final BankingSystem bankingSystem = new BankingSystem();
 	private String currentUser;
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
-	public BankingSystem() {
+	private BankingSystem() {
 		userDAO = new UserDAO();
 		bankAccountDAO = new BankAccountDAO();
 	}
@@ -56,5 +57,14 @@ public class BankingSystem {
 
 	public BankAccount getAccount(final int accountNumber) {
 		return bankAccountDAO.getAccount(accountNumber);
+	}
+
+	public boolean makeDeposit(final int accountNumber, final double balance) throws BankingSystemException {
+		if(balance < 0.00) {
+			throw new BankingSystemException("Invalid Balance Amount, Must Be Greater Than Or Equal To $0.00 ");
+		}
+		return bankAccountDAO.makeDeposit(accountNumber, balance);
+		
+		
 	}
 }
