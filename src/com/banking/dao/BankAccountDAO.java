@@ -10,7 +10,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.banking.bo.BankAccount;
+import com.banking.bo.BankingSystem;
 import com.banking.bo.RequestTicket;
+import com.banking.bo.types.TransactionType;
 import com.banking.exception.BankingSystemException;
 import com.banking.util.OracleDBConnection;
 
@@ -143,7 +145,7 @@ public class BankAccountDAO {
 	}
 
 	public boolean makeDeposit(int accountNumber, double amount){
-		boolean depositSuccess = false;
+		boolean successfulDeposit = false;
 		try(Connection connection = OracleDBConnection.getConnection()){
 			String selectAccount = "Select balance From BankAccounts Where account_number = ?";
 			PreparedStatement getBalanceStatement = connection.prepareStatement(selectAccount);
@@ -160,14 +162,14 @@ public class BankAccountDAO {
 			updateBalanceStatement.setInt(2, accountNumber);
 			int updatedRows = updateBalanceStatement.executeUpdate();
 			if(updatedRows == 1) {
-				depositSuccess = true;
+				successfulDeposit = true;
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
 		}catch(SQLException e) {
 			log.error(e);
 		}
-		return depositSuccess;
+		return successfulDeposit;
 	}
 
 	public double makeWithdrawal(int accountNumber, double amountToWithdrawal) throws BankingSystemException {

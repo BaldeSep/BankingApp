@@ -8,7 +8,7 @@ import com.banking.bo.types.TransactionType;
 import com.banking.bo.types.UserType;
 import com.banking.dao.BankAccountDAO;
 import com.banking.dao.MoneyTransferDAO;
-import com.banking.dao.TransactionDAO;
+import com.banking.dao.OneWayTransactionDAO;
 import com.banking.dao.UserDAO;
 import com.banking.exception.BankingSystemException;
 
@@ -18,12 +18,12 @@ public class BankingSystem {
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
 	private MoneyTransferDAO moneyTransferDAO;
-	private TransactionDAO transactionDAO;
+	private OneWayTransactionDAO oneWayTransactionDAO;
 	private BankingSystem() {
 		userDAO = new UserDAO();
 		bankAccountDAO = new BankAccountDAO();
 		moneyTransferDAO = new MoneyTransferDAO();
-		transactionDAO = new TransactionDAO();
+		oneWayTransactionDAO = new OneWayTransactionDAO();
 	}
 	
 	public static BankingSystem getInstance() {
@@ -66,11 +66,8 @@ public class BankingSystem {
 		return bankAccountDAO.getAccount(accountNumber);
 	}
 
-	public boolean makeDeposit(final int accountNumber, final double balance) throws BankingSystemException {
-		if(balance < 0.00) {
-			throw new BankingSystemException("Invalid Balance Amount, Must Be Greater Than Or Equal To $0.00 ");
-		}
-		return bankAccountDAO.makeDeposit(accountNumber, balance);
+	public boolean makeDeposit(final int accountNumber, final double amount) throws BankingSystemException {
+		return bankAccountDAO.makeDeposit(accountNumber, amount);
 	}
 
 	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException {
@@ -98,8 +95,9 @@ public class BankingSystem {
 		return false;
 		
 	}
-
-	public boolean logTransaction(final TransactionType type, final  int sourceAccount,final int destAccount, final double amount) {
-		return transactionDAO.logTransaction(type, sourceAccount, destAccount, amount);
+	
+	public boolean logOneWayTransaction(final TransactionType type,final int accountNumber, final double amount) {
+		return oneWayTransactionDAO.logTransaction(type, accountNumber, amount);
 	}
+
 }
