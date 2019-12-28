@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.banking.bo.types.TransactionType;
 import com.banking.bo.types.UserType;
 import com.banking.dao.BankAccountDAO;
 import com.banking.dao.MoneyTransferDAO;
+import com.banking.dao.TransactionDAO;
 import com.banking.dao.UserDAO;
 import com.banking.exception.BankingSystemException;
 
@@ -16,10 +18,12 @@ public class BankingSystem {
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
 	private MoneyTransferDAO moneyTransferDAO;
+	private TransactionDAO transactionDAO;
 	private BankingSystem() {
 		userDAO = new UserDAO();
 		bankAccountDAO = new BankAccountDAO();
 		moneyTransferDAO = new MoneyTransferDAO();
+		transactionDAO = new TransactionDAO();
 	}
 	
 	public static BankingSystem getInstance() {
@@ -67,8 +71,6 @@ public class BankingSystem {
 			throw new BankingSystemException("Invalid Balance Amount, Must Be Greater Than Or Equal To $0.00 ");
 		}
 		return bankAccountDAO.makeDeposit(accountNumber, balance);
-		
-		
 	}
 
 	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException {
@@ -95,5 +97,9 @@ public class BankingSystem {
 		}
 		return false;
 		
+	}
+
+	public boolean logTransaction(final TransactionType type, final  int sourceAccount,final int destAccount, final double amount) {
+		return transactionDAO.logTransaction(type, sourceAccount, destAccount, amount);
 	}
 }
