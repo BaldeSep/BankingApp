@@ -20,7 +20,7 @@ public class BankAccountDAO {
 	public boolean createBankAccount(final String userName) {
 		boolean createdAccount = false;
 		
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			// Create SQL Statement
 			String insertBankAccount = "INSERT INTO BANKACCOUNTS (holder) VALUES (?)";
 			PreparedStatement insertBankAccountStatement = connection.prepareStatement(insertBankAccount);
@@ -42,7 +42,7 @@ public class BankAccountDAO {
 	public boolean createBankAccount(final String userName, final double initialBalance) {
 		boolean createdAccount = false;
 		
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			// Create SQL Statement
 			String insertBankAccount = "INSERT INTO BANKACCOUNTS (holder, balance) VALUES (?, ?)";
 			PreparedStatement insertBankAccountStatement = connection.prepareStatement(insertBankAccount);
@@ -69,7 +69,7 @@ public class BankAccountDAO {
 	public boolean applyForBankAccount(RequestTicket ticket) {
 		boolean applicationSent = false;
 		
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String userName = ticket.getUserName();
 			double defaultBalance =  ticket.getInitialBalance();
 			String sql = "Insert Into RequestTicket(user_name, default_balance) Values(?, ?)";
@@ -95,7 +95,7 @@ public class BankAccountDAO {
 
 	public List<BankAccount> getAccounts(String userName) {
 		List<BankAccount> accounts = new ArrayList<>();
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String sql = "Select account_number, holder, balance From BankAccounts Where holder = ?";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, userName);
@@ -118,7 +118,7 @@ public class BankAccountDAO {
 	public BankAccount getAccount(int accountNumber) {
 		List<BankAccount> accounts = new ArrayList<>();
 		BankAccount account = null;
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String sql = "Select account_number, holder, balance From BankAccounts Where account_number = ?";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, accountNumber);
@@ -144,7 +144,7 @@ public class BankAccountDAO {
 
 	public boolean makeDeposit(int accountNumber, double amount){
 		boolean depositSuccess = false;
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String selectAccount = "Select balance From BankAccounts Where account_number = ?";
 			PreparedStatement getBalanceStatement = connection.prepareStatement(selectAccount);
 			getBalanceStatement.setInt(1, accountNumber);
@@ -172,7 +172,7 @@ public class BankAccountDAO {
 
 	public double makeWithdrawal(int accountNumber, double amountToWithdrawal) throws BankingSystemException {
 		double moneyWithdrawn = 0.00;
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String queryAccount = "Select balance From BankAccounts Where account_number = ?";
 			PreparedStatement getBalanceStatement = connection.prepareStatement(queryAccount);
 			getBalanceStatement.setInt(1, accountNumber);

@@ -18,7 +18,7 @@ public class UserDAO {
 	// Register User and add them into the Database
 	public boolean registerUser(String userName, String password, UserType type) {
 		boolean userInserted = false;
-		try(Connection connection = OracleDBConnection.getInstance()) {
+		try(Connection connection = OracleDBConnection.getConnection()) {
 			// Run SQL Command
 			String insertUserSqlCommand = "Insert Into Users (user_name, password, user_type) Values (?, ?, ?)";
 			PreparedStatement insertUserStatement = connection.prepareStatement(insertUserSqlCommand);
@@ -44,7 +44,7 @@ public class UserDAO {
 	public boolean verifyUserCredentials(String userName, String password) {
 		boolean userExists = false;
 		
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			// Create SQL Command
 			String queryUser = "Select user_name From Users Where user_name = ? And password = ?";
 			PreparedStatement queryUserStatement = connection.prepareStatement(queryUser);

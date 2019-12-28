@@ -85,4 +85,15 @@ public class BankingSystem {
 	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) {
 		return moneyTransferDAO.viewMoneyTransfers(destinationUserName);
 	}
+
+	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException {
+		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
+		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
+		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
+		if(withdrawalAmount >= 0 && successfulDeposit) {
+			return true;
+		}
+		return false;
+		
+	}
 }

@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.BankingSystem;
 import com.banking.bo.MoneyTransfer;
+import com.banking.exception.BankingSystemException;
 import com.banking.util.OracleDBConnection;
 
 public class MoneyTransferDAO {
@@ -17,7 +19,7 @@ public class MoneyTransferDAO {
 	
 	public boolean postMoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) {
 		boolean transferSuccess = false;
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String sqlInsertNewMoneyTransfer = "Insert Into MoneyTransfer (source_account, destination_account, amount) Values (?, ?, ?)";
 			PreparedStatement statementInsertNewMoneyTransfer = connection.prepareStatement(sqlInsertNewMoneyTransfer);
 			statementInsertNewMoneyTransfer.setInt(1, sourceAccountNumber);
@@ -37,7 +39,7 @@ public class MoneyTransferDAO {
 
 	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) {
 		List<MoneyTransfer> moneyTransfers = new ArrayList<>();
-		try(Connection connection = OracleDBConnection.getInstance()){
+		try(Connection connection = OracleDBConnection.getConnection()){
 			String sqlGetAccountsOfUsers = "Select account_number From BankAccounts Where holder = ?";
 			PreparedStatement statementGetAccountsOfUsers = connection.prepareStatement(sqlGetAccountsOfUsers);
 			statementGetAccountsOfUsers.setString(1, destinationUserName);
@@ -67,6 +69,37 @@ public class MoneyTransferDAO {
 			log.error(e);
 		}
 		return moneyTransfers;
+	}
+
+	public MoneyTransfer acceptMoneyTransfer(int transferId) throws BankingSystemException{
+		MoneyTransfer transfer = null;
+		BankingSystem system = BankingSystem.getInstance();
+		try(Connection connection = OracleDBConnection.getConnection()){
+			String sqlGetTransfer = "Select source_account, destination_account, amount From MoneyTransfer Where transfer_id = ?";
+			PreparedStatement statementGetTransfer = connection.prepareStatement(sqlGetTransfer);
+			statementGetTransfer.setInt(1, transferId);
+			ResultSet setTransfer = statementGetTransfer.executeQuery();
+			int sourceAccountNumber = -1;
+			int destinationAccountNumber = -1;
+			double amount = -0.00;
+			if(setTransfer.next()) {
+				sourceAccountNumber = setTransfer.getInt("source_account");
+				destinationAccountNumber = setTransfer.getInt("destination_account");
+				amount = setTransfer.getDouble("amount");
+				transfer = new MoneyTransfer(sourceAccountNumber, destinationAccountNumber, amount);
+				String sqlDeleteTransfer = "Delete From MoneyTransfer Where transfer_id = ?";
+				PreparedStatement statementDeleteTransfer = connection.prepareStatement(sqlDeleteTransfer);
+				statementDeleteTransfer.setInt(1, transferId);
+				statementDeleteTransfer.executeUpdate();
+			}
+			
+			
+		}catch(ClassNotFoundException e) {
+			log.error(e);
+		}catch(SQLException e) {
+			log.error(e);
+		}
+		return transfer;
 	}
 	
 }

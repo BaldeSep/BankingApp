@@ -9,10 +9,7 @@ public class OracleDBConnection {
 	
 	
 	
-	public static Connection getInstance() throws ClassNotFoundException, SQLException {
-		if(connection != null) {
-			return connection;
-		}
+	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("oracle.jdbc.OracleDriver");
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
 		String userName = "java";

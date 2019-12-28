@@ -12,7 +12,6 @@ public class MoneyTransfer {
 		super();
 		this.sourceAccountNumber = sourceAccountNumber;
 		this.destinationAccountNumber = destinationAccountNumber;
-		this.amount = amount;
 	}
 
 	public int getSourceAccountNumber() {
@@ -26,7 +25,7 @@ public class MoneyTransfer {
 	public int getDestinationAccountNumber() {
 		return destinationAccountNumber;
 	}
-
+	
 	public void setDestinationAccountNumber(int destinationAccountNumber) {
 		this.destinationAccountNumber = destinationAccountNumber;
 	}
