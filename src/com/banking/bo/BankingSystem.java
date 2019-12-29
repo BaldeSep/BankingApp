@@ -74,20 +74,27 @@ public class BankingSystem {
 		}
 		return bankAccountDAO.createBankAccount(userName, initialBalance);
 	}
-
-	public RequestTicket generateRequestTicket(final String userName, final double balance) {
+	
+	// When A User Applies for A Bank Account A Request Ticket Is Generated
+	public RequestTicket generateRequestTicket(final String userName, final double balance) throws BankingSystemException {
+		if(balance < 0) {
+			throw new BankingSystemException("Invalid Initial Balance Enter A Balance Greater Than Or Equal To $0.00");
+		}
 		return new RequestTicket(userName, balance);
 	}
-
-	public boolean applyForBankAccount(final RequestTicket ticket) {
+	
+	// Give a request ticket and then it will be added to the database
+	public boolean applyForBankAccount(final RequestTicket ticket) throws LibraryException, DatabaseException {
 		return bankAccountDAO.applyForBankAccount(ticket);
 	}
-
-	public List<BankAccount> getAccounts(final String userName) {
+	
+	// Get a list of accounts based off of user name
+	public List<BankAccount> getAccounts(final String userName) throws LibraryException, DatabaseException {
 		return bankAccountDAO.getAccounts(userName);
 	}
 
-	public BankAccount getAccount(final int accountNumber) {
+	// Get a single account based off of account number
+	public BankAccount getAccount(final int accountNumber) throws LibraryException, DatabaseException {
 		return bankAccountDAO.getAccount(accountNumber);
 	}
 
