@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.banking.bo.BankingSystem;
 import com.banking.bo.types.UserType;
-import com.banking.dao.UserDAO;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
 

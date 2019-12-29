@@ -1,6 +1,5 @@
 package com.banking.bo;
 
-import java.time.LocalDateTime;
 
 public class RequestTicket {
 	private String userName;

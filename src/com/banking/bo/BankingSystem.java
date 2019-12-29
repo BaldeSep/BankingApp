@@ -1,10 +1,7 @@
 package com.banking.bo;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 import com.banking.bo.types.TransactionType;
 import com.banking.bo.types.UserType;
@@ -113,7 +110,7 @@ public class BankingSystem {
 
 	// Given an account number and an amount to withdrawal this removes the amount of money from the desired account
 	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException, DatabaseException, LibraryException {
-		if(amountToWithdrawal < 0.00) {
+		if(amountToWithdrawal <= 0.00) {
 			throw new BankingSystemException("Invalid Amount To Withdrawal Must By Greater Than $0.00.");
 		}
 		double money = bankAccountDAO.makeWithdrawal(accountNumber, amountToWithdrawal);
@@ -125,8 +122,8 @@ public class BankingSystem {
 		
 	}
 	
-	
-	public boolean postMoneyTransfer(final int sourceAccountNumber, final int destinationAccountNumber, final double amount) throws BankingSystemException {
+	// Given a source and destination account number and an amount of money this will post a request to tranfer money from one account to another
+	public boolean postMoneyTransfer(final int sourceAccountNumber, final int destinationAccountNumber, final double amount) throws BankingSystemException, DatabaseException, LibraryException {
 		if(amount < 0) {
 			throw new BankingSystemException("Invalid Transfer Amount, Must Be Greater Than Or Equal To $0.00");
 		}
@@ -140,13 +137,15 @@ public class BankingSystem {
 		return false;
 	}
 
-	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) {
+	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) throws DatabaseException, LibraryException {
 		return moneyTransferDAO.viewMoneyTransfers(destinationUserName);
 	}
 
+	// Given a money transfer id the money will transfer from one account to another
 	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
 		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
 		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
+		System.out.println(transfer.getAmount());
 		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
 		if(withdrawalAmount >= 0 && successfulDeposit) {
 			return true;
@@ -155,6 +154,7 @@ public class BankingSystem {
 		
 	}
 	
+	// When a deposit or a withdraw occur then this will log them in the database
 	public boolean logOneWayTransaction(final TransactionType type,final int accountNumber, final double amount) {
 		return oneWayTransactionDAO.logTransaction(type, accountNumber, amount);
 	}

@@ -6,10 +6,11 @@ import org.junit.Test;
 
 import com.banking.bo.BankingSystem;
 import com.banking.bo.types.TransactionType;
-import com.banking.dao.MoneyTransferDAO;
 import com.banking.dao.MoneyTransferTransactionDAO;
 import com.banking.dao.OneWayTransactionDAO;
 import com.banking.exception.BankingSystemException;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 
 public class AddTransactionLogTest {
 	public void addOneWayTransaction() {
@@ -38,8 +39,9 @@ public class AddTransactionLogTest {
 		boolean depositSuccess = false;
 		try {
 			depositSuccess = system.makeDeposit(accountNumber, amount);
-		} catch (BankingSystemException e) {
-			System.out.println(e);
+		} catch (BankingSystemException | LibraryException | DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		assertEquals(true, depositSuccess);
@@ -52,10 +54,10 @@ public class AddTransactionLogTest {
 		double money = 0.00;
 		try {
 			money = system.makeWithdrawal(accountNumber, amount);
-		} catch (BankingSystemException e) {
-			System.out.println(e);
+		} catch (BankingSystemException | DatabaseException | LibraryException e) {
+			System.out.println(e.getMessage());
 		}
-		
+
 		assertEquals(true, money > 0);
 	}
 	
@@ -68,8 +70,8 @@ public class AddTransactionLogTest {
 		boolean success = false;
 		try {
 			success = system.postMoneyTransfer(srcAccount, destAccount, amount);
-		} catch (BankingSystemException e) {
-			System.out.println(e);
+		} catch (BankingSystemException | DatabaseException | LibraryException e) {
+			System.out.println(e.getMessage());
 		}
 		
 		assertEquals(true, success);

@@ -6,18 +6,20 @@ import org.junit.Test;
 
 import com.banking.bo.BankingSystem;
 import com.banking.exception.BankingSystemException;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 
-public class MakeMoneyTranserTest {
+public class PostMoneyTransferTest {
 	@Test
 	public void postMoneyTransfer() {
 		BankingSystem system = BankingSystem.getInstance();
-		int sourceAccountNumber = 201;
-		int destinationAccountNumber = 40; 
-		double amountToTransfer = -300.00;
+		int sourceAccountNumber = 21;
+		int destinationAccountNumber = 12; 
+		double amountToTransfer = 5555.00;
 		boolean posted = false;
 		try {
 			posted = system.postMoneyTransfer(sourceAccountNumber, destinationAccountNumber, amountToTransfer);
-		}catch(BankingSystemException e) {
+		} catch (BankingSystemException | DatabaseException | LibraryException e) {
 			System.out.println(e.getMessage());
 		}
 		assertEquals(true, posted);

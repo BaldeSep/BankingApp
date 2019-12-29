@@ -1,6 +1,7 @@
 package com.banking.bo;
 
 public class MoneyTransfer {
+	private int id;
 	private int sourceAccountNumber;
 	private int destinationAccountNumber;
 	private double amount;
@@ -8,10 +9,20 @@ public class MoneyTransfer {
 	public MoneyTransfer() {
 	}
 
-	public MoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) {
+	public MoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount, int id) {
 		super();
 		this.sourceAccountNumber = sourceAccountNumber;
 		this.destinationAccountNumber = destinationAccountNumber;
+		this.amount = amount;
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getSourceAccountNumber() {
@@ -40,8 +51,8 @@ public class MoneyTransfer {
 
 	@Override
 	public String toString() {
-		return "MoneyTransfer [sourceAccountNumber=" + sourceAccountNumber + ", destinationAccountNumber="
-				+ destinationAccountNumber + ", amount=" + amount + "]";
+		return "MoneyTransfer [tranferId=" + id + ", sourceAccountNumber=" + sourceAccountNumber
+				+ ", destinationAccountNumber=" + destinationAccountNumber + ", amount=" + amount + "]";
 	}
 	
 	

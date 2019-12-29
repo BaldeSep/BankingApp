@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.banking.bo.types.UserType;
-import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;

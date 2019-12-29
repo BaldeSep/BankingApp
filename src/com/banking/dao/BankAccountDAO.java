@@ -10,9 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.banking.bo.BankAccount;
-import com.banking.bo.BankingSystem;
 import com.banking.bo.RequestTicket;
-import com.banking.bo.types.TransactionType;
 import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;

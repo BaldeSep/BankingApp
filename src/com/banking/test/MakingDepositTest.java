@@ -13,7 +13,7 @@ public class MakingDepositTest {
 	@Test
 	public void makeDeposit(){
 		BankingSystem system = BankingSystem.getInstance();
-		int accountNumber = 200;
+		int accountNumber = 5;
 		double amount = 2345.23;
 		boolean successful = false;
 		try {
