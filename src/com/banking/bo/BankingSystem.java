@@ -98,7 +98,8 @@ public class BankingSystem {
 		return bankAccountDAO.getAccount(accountNumber);
 	}
 
-	public boolean makeDeposit(final int accountNumber, final double amount) throws BankingSystemException {
+	// Given an account number and an amount of money this will deposit money into user's account
+	public boolean makeDeposit(final int accountNumber, final double amount) throws BankingSystemException, LibraryException, DatabaseException {
 		if(amount <= 0) {
 			throw new BankingSystemException("Invalid Deposit Amount, insert deposit greater than $0.00");
 		}
@@ -110,7 +111,11 @@ public class BankingSystem {
 		return false;
 	}
 
-	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException {
+	// Given an account number and an amount to withdrawal this removes the amount of money from the desired account
+	public double makeWithdrawal(final int accountNumber ,final double amountToWithdrawal) throws BankingSystemException, DatabaseException, LibraryException {
+		if(amountToWithdrawal < 0.00) {
+			throw new BankingSystemException("Invalid Amount To Withdrawal Must By Greater Than $0.00.");
+		}
 		double money = bankAccountDAO.makeWithdrawal(accountNumber, amountToWithdrawal);
 		if(money > 0.00) {
 			logOneWayTransaction(TransactionType.Withdrawal, accountNumber, amountToWithdrawal);
@@ -119,7 +124,8 @@ public class BankingSystem {
 		return 0.00;
 		
 	}
-
+	
+	
 	public boolean postMoneyTransfer(final int sourceAccountNumber, final int destinationAccountNumber, final double amount) throws BankingSystemException {
 		if(amount < 0) {
 			throw new BankingSystemException("Invalid Transfer Amount, Must Be Greater Than Or Equal To $0.00");
@@ -138,7 +144,7 @@ public class BankingSystem {
 		return moneyTransferDAO.viewMoneyTransfers(destinationUserName);
 	}
 
-	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException {
+	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
 		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
 		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
 		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
@@ -156,5 +162,4 @@ public class BankingSystem {
 	public boolean logMoneyTransfers(final int sourceAccount,final int destinationAccount,final double amount, final int transferId ) {
 		return moneyTransferTransactionDAO.logTransaction(sourceAccount, destinationAccount, transferId, amount);
 	}
-
 }

@@ -152,7 +152,9 @@ public class BankAccountDAO {
 		return account;
 	}
 
-	public boolean makeDeposit(int accountNumber, double amount){
+	// Given a BankAccount number and an amount to deposit this will deposit money into the account
+	// within the database
+	public boolean makeDeposit(int accountNumber, double amount) throws LibraryException, DatabaseException{
 		boolean successfulDeposit = false;
 		try(Connection connection = OracleDBConnection.getConnection()){
 			String selectAccount = "Select balance From BankAccounts Where account_number = ?";
@@ -162,6 +164,8 @@ public class BankAccountDAO {
 			double oldBalance = 0.00;
 			if(accountBalanceSet.next()) {
 				oldBalance = accountBalanceSet.getDouble("balance");
+			}else {
+				throw new DatabaseException("Sorry We Could Not Find The Account: " + accountNumber + ". Try another account.");
 			}
 			double newBalance = oldBalance + amount;
 			String addNewBalance = "Update BankAccounts Set balance = ? Where account_number = ? ";
@@ -171,16 +175,21 @@ public class BankAccountDAO {
 			int updatedRows = updateBalanceStatement.executeUpdate();
 			if(updatedRows == 1) {
 				successfulDeposit = true;
+			}else {
+				throw new DatabaseException("Sorry There Was An Error Making This Deposit. Try Again With A Differend Account");
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException();
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException();
 		}
 		return successfulDeposit;
 	}
-
-	public double makeWithdrawal(int accountNumber, double amountToWithdrawal) throws BankingSystemException {
+	
+	// Given an account number and an amount to withdrawal this removes money from account
+	public double makeWithdrawal(int accountNumber, double amountToWithdrawal) throws DatabaseException, BankingSystemException, LibraryException  {
 		double moneyWithdrawn = 0.00;
 		try(Connection connection = OracleDBConnection.getConnection()){
 			String queryAccount = "Select balance From BankAccounts Where account_number = ?";
@@ -191,13 +200,11 @@ public class BankAccountDAO {
 			if(accountSet.next()) {
 				oldBalance = accountSet.getDouble("balance");
 			}else {
-				throw new BankingSystemException("Bank Account Could Not Be Found With Given Account Number: " + accountNumber );
+				throw new DatabaseException("Bank Account Could Not Be Found With Given Account Number: " + accountNumber );
 			}
 			double newBalance = oldBalance - amountToWithdrawal;
 			if(newBalance < 0) {
 				throw new BankingSystemException("Amount Withdrawn Exceeds Available Funds");
-			}else if(newBalance > oldBalance) {
-				throw new BankingSystemException("Amount Withdrawn Was A Negative value");
 			}
 			String updateBalance = "Update BankAccounts Set balance = ? Where account_number = ?";
 			PreparedStatement updateBalanceStatement = connection.prepareStatement(updateBalance);
@@ -207,12 +214,14 @@ public class BankAccountDAO {
 			if(updatedCount == 1) {
 				moneyWithdrawn = amountToWithdrawal;
 			}else {
-				throw new BankingSystemException("Error Removing Funds With Account");
+				throw new DatabaseException("Error Removing Funds With Account");
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException();
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException();
 		}
 		return moneyWithdrawn;
 	}
