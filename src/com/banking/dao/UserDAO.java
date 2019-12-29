@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.banking.bo.types.UserType;
+import com.banking.exception.BankingSystemException;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class UserDAO {
@@ -16,7 +19,7 @@ public class UserDAO {
 	public UserDAO() {}
 	
 	// Register User and add them into the Database
-	public boolean registerUser(String userName, String password, UserType type) {
+	public boolean registerUser(String userName, String password, UserType type) throws DatabaseException, LibraryException {
 		boolean userInserted = false;
 		try(Connection connection = OracleDBConnection.getConnection()) {
 			// Run SQL Command
@@ -29,21 +32,22 @@ public class UserDAO {
 			int count = insertUserStatement.executeUpdate();
 			// If There was a successful insert return true 
 			// Else return false
-			if(count > 0) {
+			if(count == 1) {
 				userInserted = true;
 			}
 		} catch (ClassNotFoundException e) {
-			log.error(e);
+			log.error(e); 
+			throw new LibraryException("Sorry There Was An Unforseen Error That We Can't Recover From Try Again Later");
 		} catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException("Sorry There Was An Issue With The Registration Process, Try Registering With A Different User Name.");
 		}
 		return userInserted;
 	}
 	
 	// Verify If The User Exists Within the database
-	public boolean verifyUserCredentials(String userName, String password) {
+	public boolean verifyUserCredentials(String userName, String password) throws DatabaseException, LibraryException {
 		boolean userExists = false;
-		
 		try(Connection connection = OracleDBConnection.getConnection()){
 			// Create SQL Command
 			String queryUser = "Select user_name From Users Where user_name = ? And password = ?";
@@ -56,11 +60,17 @@ public class UserDAO {
 			// If there is a result then the user exists
 			if(results.next()) {
 				userExists = true;
+			}else {
+				DatabaseException databaseException = new DatabaseException("Sorry We Could Not Verify That User: " + userName + " Exists, Try Again With Different Credentials");
+				log.error(databaseException);
+				throw databaseException;
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException("Sorry There Was An Unforseen Error That We Can't Recover From Try Again Later");
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException("Sorry There Was An Issue Trying To Verify Your Credientials. Try Again Later.");
 		}
 		
 		return userExists;

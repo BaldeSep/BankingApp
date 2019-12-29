@@ -14,12 +14,15 @@ import com.banking.bo.BankingSystem;
 import com.banking.bo.RequestTicket;
 import com.banking.bo.types.TransactionType;
 import com.banking.exception.BankingSystemException;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class BankAccountDAO {
 	private static final Logger log = Logger.getLogger(BankAccountDAO.class);
 	
-	public boolean createBankAccount(final String userName) {
+	// Create A Bank Account With An Initial Balance Of $0.00
+	public boolean createBankAccount(final String userName) throws LibraryException, DatabaseException {
 		boolean createdAccount = false;
 		
 		try(Connection connection = OracleDBConnection.getConnection()){
@@ -29,19 +32,22 @@ public class BankAccountDAO {
 			insertBankAccountStatement.setString(1, userName);
 			// Execute Statement
 			int count = insertBankAccountStatement.executeUpdate();
-			if(count > 0) {
+			if(count == 1) {
 				createdAccount = true;
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException();
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException("Sorry There Was An Error When Creating Your Account, Try Again Later and Please Report To Customer Support");
 		}
 		
 		return createdAccount;
 	}
 	
-	public boolean createBankAccount(final String userName, final double initialBalance) {
+	// Create A Bank Account With A Starting Balance
+	public boolean createBankAccount(final String userName, final double initialBalance) throws LibraryException, DatabaseException {
 		boolean createdAccount = false;
 		
 		try(Connection connection = OracleDBConnection.getConnection()){
@@ -49,20 +55,18 @@ public class BankAccountDAO {
 			String insertBankAccount = "INSERT INTO BANKACCOUNTS (holder, balance) VALUES (?, ?)";
 			PreparedStatement insertBankAccountStatement = connection.prepareStatement(insertBankAccount);
 			insertBankAccountStatement.setString(1, userName);
-			if(initialBalance >= 0.0) {
-				insertBankAccountStatement.setDouble(2, initialBalance);
-			}else {
-				insertBankAccountStatement.setDouble(2, 0.00);
-			}
+			insertBankAccountStatement.setDouble(2, initialBalance);
 			// Execute Statement
 			int count = insertBankAccountStatement.executeUpdate();
-			if(count > 0) {
+			if(count == 1) {
 				createdAccount = true;
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException();
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException("Sorry There Was An Issue Creating Your Bank Account, Contact Support.");
 		}
 		
 		return createdAccount;

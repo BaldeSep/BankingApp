@@ -4,15 +4,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Test;
 
+import com.banking.bo.BankingSystem;
 import com.banking.dao.UserDAO;
+import com.banking.exception.BankingSystemException;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 
 public class LogginInUserTest {
 	@Test
 	public void loginUserTest() {
-		UserDAO userDAO = new UserDAO();
-		String userName = "killian";
+		BankingSystem system = BankingSystem.getInstance();
+		String userName = "colin";
 		String password = "abc123";
-		boolean userExists = userDAO.verifyUserCredentials(userName, password);
+		boolean userExists = false;
+		try {
+			userExists = system.verifyUserCredentials(userName, password);
+		} catch (DatabaseException | LibraryException e) {
+		}
 		assertEquals(true, userExists);	
 	}
 }
