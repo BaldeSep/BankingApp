@@ -188,6 +188,8 @@ public class BankAccountDAO {
 			double newBalance = oldBalance - amountToWithdrawal;
 			if(newBalance < 0) {
 				throw new BankingSystemException("Amount Withdrawn Exceeds Available Funds");
+			}else if(newBalance > oldBalance) {
+				throw new BankingSystemException("Amount Withdrawn Was A Negative value");
 			}
 			String updateBalance = "Update BankAccounts Set balance = ? Where account_number = ?";
 			PreparedStatement updateBalanceStatement = connection.prepareStatement(updateBalance);

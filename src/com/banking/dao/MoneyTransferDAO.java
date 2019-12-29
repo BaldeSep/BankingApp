@@ -1,5 +1,6 @@
 package com.banking.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,24 +18,25 @@ import com.banking.util.OracleDBConnection;
 public class MoneyTransferDAO {
 	private static final Logger log = Logger.getLogger(MoneyTransferDAO.class);
 	
-	public boolean postMoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) {
-		boolean transferSuccess = false;
+	public int postMoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) {
+		int moneyTransferId = -1;
 		try(Connection connection = OracleDBConnection.getConnection()){
-			String sqlInsertNewMoneyTransfer = "Insert Into MoneyTransfer (source_account, destination_account, amount) Values (?, ?, ?)";
-			PreparedStatement statementInsertNewMoneyTransfer = connection.prepareStatement(sqlInsertNewMoneyTransfer);
+			String sqlInsertNewMoneyTransfer = "Begin Insert Into MoneyTransfer (source_account, destination_account, amount) Values (?, ?, ?) returning Transfer_Id into ?; end;";
+			CallableStatement statementInsertNewMoneyTransfer = connection.prepareCall(sqlInsertNewMoneyTransfer);
 			statementInsertNewMoneyTransfer.setInt(1, sourceAccountNumber);
 			statementInsertNewMoneyTransfer.setInt(2, destinationAccountNumber);
 			statementInsertNewMoneyTransfer.setDouble(3, amount);
+			statementInsertNewMoneyTransfer.registerOutParameter(4, java.sql.Types.INTEGER);
 			int countUpdated = statementInsertNewMoneyTransfer.executeUpdate();
 			if(countUpdated == 1) {
-				transferSuccess = true;
+				moneyTransferId = statementInsertNewMoneyTransfer.getInt(4);
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
 		}catch(SQLException e) {
 			log.error(e);
 		}
-		return transferSuccess;
+		return moneyTransferId;
 	}
 
 	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) {
