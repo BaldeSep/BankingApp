@@ -154,12 +154,13 @@ public class BankingSystem {
 		
 	}
 	
-	// When a deposit or a withdraw occur then this will log them in the database
-	public boolean logOneWayTransaction(final TransactionType type,final int accountNumber, final double amount) {
+	// When a deposit or a withdraw occurs then this will log them in the database
+	public boolean logOneWayTransaction(final TransactionType type,final int accountNumber, final double amount) throws LibraryException, DatabaseException {
 		return oneWayTransactionDAO.logTransaction(type, accountNumber, amount);
 	}
 	
-	public boolean logMoneyTransfers(final int sourceAccount,final int destinationAccount,final double amount, final int transferId ) {
+	// When a Money Transfer Post occurs then this will log it into the database
+	public boolean logMoneyTransfers(final int sourceAccount,final int destinationAccount,final double amount, final int transferId ) throws LibraryException, DatabaseException {
 		return moneyTransferTransactionDAO.logTransaction(sourceAccount, destinationAccount, transferId, amount);
 	}
 }

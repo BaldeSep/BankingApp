@@ -6,11 +6,13 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class MoneyTransferTransactionDAO {
 	private static final Logger log = Logger.getLogger(MoneyTransferDAO.class); 
-	public boolean logTransaction(int sourceAccount, int destinationAccount, int transferId, double amount) {
+	public boolean logTransaction(int sourceAccount, int destinationAccount, int transferId, double amount) throws LibraryException, DatabaseException {
 		boolean logSuccessful = false;
 		try(Connection connection = OracleDBConnection.getConnection()){
 			String sqlInsertNewLog = "Insert Into MoneyTransferTransactionLog (source_account, destination_account, transfer_id, amount, date_of_transaction) Values(?, ?, ?, ?, ?)";
@@ -23,11 +25,15 @@ public class MoneyTransferTransactionDAO {
 			int countUpdates = statementInsertNewLog.executeUpdate();
 			if(countUpdates == 1) {
 				logSuccessful = true;
+			}else {
+				log.error(new DatabaseException("Improper Number of Updates Performed. Number of Updates: " + countUpdates));
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);
+			throw new LibraryException();
 		}catch(SQLException e) {
 			log.error(e);
+			throw new DatabaseException();
 		}
 		return logSuccessful;
 	}

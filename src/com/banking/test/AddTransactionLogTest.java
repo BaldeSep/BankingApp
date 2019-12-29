@@ -13,25 +13,37 @@ import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
 
 public class AddTransactionLogTest {
+	@Test
 	public void addOneWayTransaction() {
 		OneWayTransactionDAO transaction = new OneWayTransactionDAO(); 
 		TransactionType type = TransactionType.Deposit;
 		int accountNumber = 5;
 		double amount = 30.00;
-		boolean successfulLog = transaction.logTransaction(type, accountNumber, amount);	
+		boolean successfulLog = false;;
+		try {
+			successfulLog = transaction.logTransaction(type, accountNumber, amount);
+		} catch (LibraryException | DatabaseException e) {
+			System.out.println(e.getMessage());
+		}	
 		assertEquals(true,  successfulLog);
 	}
-	
+	@Test
 	public void addTransferTrasnaction() {
 		MoneyTransferTransactionDAO transaction = new MoneyTransferTransactionDAO();
 		int srcAccount = 4;
 		int destAccount = 11;
 		double amount = 30.00;
 		int transferId = 5;
-		boolean logSuccess = transaction.logTransaction(srcAccount, destAccount, transferId, amount);
+		boolean logSuccess = false;
+		try {
+			logSuccess = transaction.logTransaction(srcAccount, destAccount, transferId, amount);
+		} catch (LibraryException | DatabaseException e) {
+			System.out.println(e.getMessage());
+		}
 		assertEquals(true, logSuccess);
 	}
-
+	
+	@Test
 	public void logDeposit() {
 		BankingSystem system = BankingSystem.getInstance();
 		int accountNumber = 21;
@@ -47,10 +59,11 @@ public class AddTransactionLogTest {
 		assertEquals(true, depositSuccess);
 	}
 
+	@Test
 	public void logWithdrawal() {
 		BankingSystem system = BankingSystem.getInstance();
 		int accountNumber = 4;
-		double amount = -300;
+		double amount = 300;
 		double money = 0.00;
 		try {
 			money = system.makeWithdrawal(accountNumber, amount);
