@@ -68,10 +68,10 @@ public class CustomerMenu implements Menu {
 			ApplicationMenu.getMenu().presentMenu(this);
 			break;
 		case View_Balance_Of_Bank_Account:
-			log.info(option);
+			ViewBalanceMenu.getMenu().presentMenu(this);
 			break;
 		case Make_Withdrawal:
-			log.info(option);
+			MakeWithdrawalMenu.getMenu().presentMenu(this);
 			break;
 		case Make_Deposit:
 			log.info(option);
