@@ -8,7 +8,6 @@ public enum CustomerMenuOptions {
 	Make_Deposit,  
 	Post_Money_Transfer,
 	Accept_Money_Transfer,
-	Go_Back,
 	Quit;
 	public static CustomerMenuOptions fromInt(int value) {
 		switch(value) {
@@ -27,8 +26,6 @@ public enum CustomerMenuOptions {
 		case 6:
 			return Accept_Money_Transfer;
 		case 7:
-			return Go_Back;
-		case 8:
 			return Quit;
 		}
 		return null;

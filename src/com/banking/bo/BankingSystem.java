@@ -35,6 +35,11 @@ public class BankingSystem {
 		return bankingSystem;
 	}
 	
+	// Returns Current Logged In User
+	public User getActiveUser() {
+		return currentUser;
+	}
+	
 	// Add user's user name and password into the database
 	public boolean registerUser(final String userName, final String password, final UserType type) throws DatabaseException, LibraryException {
 		return userDAO.registerUser(userName, password, type);
