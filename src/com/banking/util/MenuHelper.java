@@ -1,48 +1,26 @@
 package com.banking.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
-import com.banking.main.Menu;
+import com.banking.menu.options.MainMenuOptions;
 
 public class MenuHelper {
-	private static final Logger log = Logger.getLogger(Menu.class);
-	private static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-	public MenuHelper() {
-	}
+	private static final Logger log = Logger.getLogger(MenuHelper.class);
+	
+	private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	
 	public static BufferedReader getReader() {
-		return input;
+		return reader;
 	}
 	
-	public static boolean validateUserInput(String userInput, int numberOfOptions ) {
-		if(userInput == null || userInput.matches("\\s*") || !userInput.matches("\\s*[0-" + numberOfOptions + "]\\s*")) {
-			return false;
+	public static void printMenuOptions(Enum menuOptions[]) {
+		for(Enum option : menuOptions) {
+			log.info(option.ordinal() + ") " + option);
 		}
-		return true;
+		log.info("Enter Any Number Between " + 0 + " - " + (menuOptions.length - 1) + " Below");
 	}
-	
-	public static String verifyInput(String userInput, Enum menuItems[]) {
-		while(!validateUserInput(userInput, menuItems.length - 1)) {
-			log.error("Invalid Input Enter Number Between [0 - " + (menuItems.length-1) + "]");
-			printMenuItems(menuItems);
-			try{
-				userInput = input.readLine();
-			}catch(IOException e) {
-				log.error(e);
-			}
-		}
-		
-		return userInput;
-	}
-	
-	public static void printMenuItems(Enum menuItems[]) {
-		log.info("Please Enter A Number Below to Make a Choice");
-		for (int i = 0; i < menuItems.length; i++) {
-			log.info(i+". " + menuItems[i] );
-		}
-		log.info("Enter Below Here");
-	}
+
 }
