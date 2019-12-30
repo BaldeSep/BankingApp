@@ -36,9 +36,11 @@ public class MainMenu implements Menu {
 				}
 				
 			} catch (IOException e) {
-				log.error("Sorry An Error Occured When Reading Your Input Contact Support.");
+				log.info("Sorry An Error Occured When Reading Your Input Contact Support.");
+				log.error(e);
 			} catch(NumberFormatException e) {
-				log.error("Invalid Input: Please Enter Only Integers");
+				log.info("Invalid Input: Please Enter Only Integers");
+				log.error(e);
 			}
 		}while(true);
 		parseUserInput(userInput);
