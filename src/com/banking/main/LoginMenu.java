@@ -7,6 +7,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.BankingSystem;
+import com.banking.bo.User;
+import com.banking.bo.types.UserType;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 import com.banking.main.menuoptions.LoginMenuOptions;
 import com.banking.util.MenuHelper;
 
@@ -72,21 +77,46 @@ public class LoginMenu implements Menu{
 	}
 	
 	private void getUserCredentials() {
-		BufferedReader input = MenuHelper.getReader();
+		BankingSystem system = BankingSystem.getInstance();
+		BufferedReader reader = MenuHelper.getReader();
+		int attemptsLeft = 3;
 		String userName, password = "";
-		try {
-			log.info("Enter Your User Name");
-			userName = input.readLine();
-			log.info("Enter Your Password");
-			password = input.readLine();
-		}catch(IOException e) {
-			log.error(e);
+		User verifiedUser = null; 
+		do {
+			try {
+				log.info("You Have " + attemptsLeft + " Attempts To Log In.");
+				log.info("Enter Your User Name Below");
+				userName = reader.readLine();
+				log.info("Enter Your Password Below");
+				password = reader.readLine();
+				verifiedUser = system.verifyUserCredentials(userName, password);
+				if(verifiedUser != null) {
+					break;
+				}
+			}catch(IOException e) {
+				log.error(e.getMessage());
+			}catch(DatabaseException e) {
+				log.info(e.getMessage());
+			}catch(LibraryException e) {
+				log.info(e.getMessage());
+			}
+			if(attemptsLeft == 0) {
+				break;
+			}
+			attemptsLeft--;
+		}while(true);
+		
+		if(attemptsLeft == 0) {
+			log.info("You Tried Too Many Time Try Again Soon.");
+			WelcomeMenu.getInstance().presentMenu();
 		}
 		
-		// Implement Validation Through the Backend Later...
-		boolean userExists = true;
+		if(verifiedUser.getType() == UserType.Customer) {
+			CustomerMainMenu.getInstance().presentMenu();
+		}else if(verifiedUser.getType() == UserType.Employee){
+			EmployeeMainMenu.getInstance().presentMenu();
+		}
 		
-		// Call MainMenu Here
 		
 	}
 }

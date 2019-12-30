@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.User;
 import com.banking.bo.types.UserType;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
@@ -45,11 +46,11 @@ public class UserDAO {
 	}
 	
 	// Verify If The User Exists Within the database
-	public boolean verifyUserCredentials(String userName, String password) throws DatabaseException, LibraryException {
-		boolean userExists = false;
+	public User verifyUserCredentials(String userName, String password) throws DatabaseException, LibraryException {
+		User verifiedUser = null;
 		try(Connection connection = OracleDBConnection.getConnection()){
 			// Create SQL Command
-			String queryUser = "Select user_name From Users Where user_name = ? And password = ?";
+			String queryUser = "Select user_type From Users Where user_name = ? And password = ?";
 			PreparedStatement queryUserStatement = connection.prepareStatement(queryUser);
 			// Add Dynamic Data
 			queryUserStatement.setString(1, userName);
@@ -58,7 +59,12 @@ public class UserDAO {
 			ResultSet results = queryUserStatement.executeQuery();
 			// If there is a result then the user exists
 			if(results.next()) {
-				userExists = true;
+				int userType = results.getInt("user_type");
+				if(userType == UserType.Customer.ordinal()) {
+					verifiedUser = new User(userName, password, UserType.Customer);
+				}else {
+					verifiedUser = new User(userName, password, UserType.Employee);
+				}
 			}else {
 				DatabaseException databaseException = new DatabaseException("Sorry We Could Not Verify That User: " + userName + " Exists, Try Again With Different Credentials");
 				log.error(databaseException);
@@ -72,6 +78,8 @@ public class UserDAO {
 			throw new DatabaseException("Sorry There Was An Issue Trying To Verify Your Credientials. Try Again Later.");
 		}
 		
-		return userExists;
+		return verifiedUser;
 	}
+	
+	
 }

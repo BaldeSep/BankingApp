@@ -12,7 +12,6 @@ public class MenuHelper {
 	private static final Logger log = Logger.getLogger(Menu.class);
 	private static final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 	public MenuHelper() {
-		// TODO Auto-generated constructor stub
 	}
 	public static BufferedReader getReader() {
 		return input;

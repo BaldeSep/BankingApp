@@ -1,4 +1,4 @@
-package com.banking.main;
+package com.banking.main.menuoptions;
 
 
 public enum WelcomeMenuOptions{

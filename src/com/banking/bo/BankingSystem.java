@@ -16,7 +16,7 @@ import com.banking.exception.LibraryException;
 
 public class BankingSystem {
 	private static final BankingSystem bankingSystem = new BankingSystem();
-	private String currentUser;
+	private User currentUser;
 	private UserDAO userDAO;
 	private BankAccountDAO bankAccountDAO;
 	private MoneyTransferDAO moneyTransferDAO;
@@ -41,14 +41,14 @@ public class BankingSystem {
 	}
 	
 	// Used to Log User Into The System
-	public boolean verifyUserCredentials(final String userName, final String password) throws DatabaseException, LibraryException {
+	public User verifyUserCredentials(final String userName, final String password) throws DatabaseException, LibraryException {
 		// If the user entered Valid Credentials save their userName locally.
 		// This can be used as a sort of session;
-		if(userDAO.verifyUserCredentials(userName, password)) {
-			currentUser = userName;
-			return true;
+		User verifiedUser = userDAO.verifyUserCredentials(userName, password); 
+		if(verifiedUser != null) {
+			currentUser = verifiedUser;
 		}
-		return false;
+		return verifiedUser;
 	}
 	
 	// If the User decides to log out of the system this resets the session

@@ -22,7 +22,7 @@ public class EmployeeMainMenu implements Menu {
 	
 	@Override
 	public void presentMenu() {
-		// TODO Auto-generated method stub
+		log.info("Employee Menu");
 		
 	}
 	
