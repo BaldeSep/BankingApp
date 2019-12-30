@@ -53,14 +53,15 @@ public class LoginMenu implements Menu {
 	}
 	
 	private void parseUserInput(int userInput) {
-		switch(userInput) {
-		case 0:
+		LoginMenuOptions option = LoginMenuOptions.fromInt(userInput);
+		switch(option) {
+		case Enter_Credentials:
 			login();
 			break;
-		case 1:
+		case Go_Back:
 			MainMenu.getMenu().presentMenu();
 			break;
-		case 2:
+		case Quit:
 			QuitMenu.getMenu().presentMenu();
 			break;
 		default:

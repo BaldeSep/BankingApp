@@ -47,17 +47,16 @@ public class MainMenu implements Menu {
 	}
 	
 	private void parseUserInput(int userInput) {
-		switch(userInput) {
-		case 0:
+		MainMenuOptions option = MainMenuOptions.fromInt(userInput);
+		switch(option) {
+		case Login:
 			LoginMenu.getMenu().presentMenu(this);
 			break;
-		case 1:
-			RegisterMenu.getMenu().presentMenu();
+		case Register:
+			RegisterMenu.getMenu().presentMenu(this);
 			break;
-		case 2:
+		case Quit:
 			QuitMenu.getMenu().presentMenu();
-		default:
-			break;
 		}
 	}
 
