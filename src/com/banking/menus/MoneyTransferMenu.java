@@ -139,7 +139,34 @@ public class MoneyTransferMenu implements Menu {
 	}
 	
 	private void acceptTransfers() {
-		System.out.println("Accept Transfer");
+		BankingSystem system = BankingSystem.getInstance();
+		BufferedReader reader = MenuHelper.getReader();
+		User activeUser = system.getActiveUser();
+		boolean transferAccepted = false;
+		try {
+			log.info("Enter The Transfer Id That You Wish To Accept");
+			List<MoneyTransfer> transfers = system.viewMoneyTransfers(activeUser.getUserName());
+			printAllTransfers(activeUser, transfers);
+			int transferId = Integer.parseInt(reader.readLine().trim());
+			transferAccepted = system.acceptMoneyTransfer(transferId);
+		}catch(IOException e) {
+			log.error(e);
+			log.info("Sorry An Error Occured When Reading User Input");
+		}catch(NumberFormatException e) {
+			log.error(e);
+			log.info("invalid Input Enter A Whole Number");
+		}catch(DatabaseException | LibraryException | BankingSystemException e) {
+			log.error(e);
+			log.info(e.getMessage());
+		}	
+		try {
+			log.info("Press Enter To Return To Main Menu...");
+			reader.readLine();			
+		}catch(IOException e) {
+			log.error(e);
+		}
+		prevMenu.presentMenu();
+		
 	}
 	
 	private void viewTransfers() {
@@ -149,9 +176,7 @@ public class MoneyTransferMenu implements Menu {
 		try {
 			log.info("All Transfers With You(" + activeUser.getUserName() + ") As The Sender And/Or Reciever");
 			List<MoneyTransfer> transfers = system.viewMoneyTransfers(activeUser.getUserName());
-			for(MoneyTransfer transfer: transfers) {
-				log.info(transfer);
-			}
+			printAllTransfers(activeUser, transfers);
 		}catch(DatabaseException | LibraryException e) {
 			log.error(e);
 			log.info(e.getMessage());
@@ -163,7 +188,12 @@ public class MoneyTransferMenu implements Menu {
 			log.error(e);
 		}
 		prevMenu.presentMenu();
-		
+	}
+	
+	private void printAllTransfers(User activeUser, List<MoneyTransfer> transfers) {
+		for(MoneyTransfer transfer: transfers) {
+			log.info(transfer);
+		}
 	}
 	
 	public void presentMenu(Menu prevMenu) {

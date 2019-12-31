@@ -60,7 +60,7 @@ public class MoneyTransferDAO {
 			while(accountNumbersResults.next()) {
 				accountNumbers.add(accountNumbersResults.getInt("account_number"));
 			}
-			String sqlGetAllTransfersForAccount = "Select transfer_id, source_account, destination_account, amount From MoneyTransfer Where source_account = ? Or destination_account = ?";
+			String sqlGetAllTransfersForAccount = "Select transfer_id, source_account, destination_account, amount, state From MoneyTransfer Where source_account = ? Or destination_account = ?";
 			PreparedStatement statementGetAllTransfersForAccount = connection.prepareStatement(sqlGetAllTransfersForAccount);
 			ResultSet moneyTransferResults;
 			MoneyTransfer temp;
@@ -75,6 +75,7 @@ public class MoneyTransferDAO {
 					temp.setDestinationAccountNumber(moneyTransferResults.getInt("destination_account"));
 					temp.setAmount(moneyTransferResults.getDouble("amount"));
 					temp.setId(moneyTransferResults.getInt("transfer_id"));
+					temp.setState(MoneyTransferState.fromInt(moneyTransferResults.getInt("state")));
 					moneyTransfers.add(temp);
 				}
 			}
@@ -92,7 +93,7 @@ public class MoneyTransferDAO {
 	public MoneyTransfer acceptMoneyTransfer(int transferId) throws BankingSystemException, DatabaseException, LibraryException{
 		MoneyTransfer transfer = null;
 		try(Connection connection = OracleDBConnection.getConnection()){
-			String sqlGetTransfer = "Select source_account, destination_account, amount, state From MoneyTransfer Where transfer_id = ?";
+			String sqlGetTransfer = "Select transfer_id, source_account, destination_account, amount, state From MoneyTransfer Where transfer_id = ?";
 			PreparedStatement statementGetTransfer = connection.prepareStatement(sqlGetTransfer);
 			statementGetTransfer.setInt(1, transferId);
 			ResultSet setTransfer = statementGetTransfer.executeQuery();
@@ -101,13 +102,15 @@ public class MoneyTransferDAO {
 			double amount = 0.00;
 			int state; 
 			int updatedCount = 0;
+			int id = -1;
 			if(setTransfer.next()) {
 				sourceAccountNumber = setTransfer.getInt("source_account");
 				destinationAccountNumber = setTransfer.getInt("destination_account");
 				amount = setTransfer.getDouble("amount");
 				state = setTransfer.getInt("state");
+				id = setTransfer.getInt("transfer_id");
 				if(state != MoneyTransferState.Accepted.ordinal()) {
-					transfer = new MoneyTransfer(sourceAccountNumber, destinationAccountNumber, amount, transferId);
+					transfer = new MoneyTransfer(id, sourceAccountNumber, destinationAccountNumber, amount, MoneyTransferState.Denied);
 					String sqlAcceptedTransfer = "Update MoneyTransfer Set state = ? Where transfer_id = ?";
 					PreparedStatement statementDeleteTransfer = connection.prepareStatement(sqlAcceptedTransfer);
 					statementDeleteTransfer.setInt(1, MoneyTransferState.Accepted.ordinal());

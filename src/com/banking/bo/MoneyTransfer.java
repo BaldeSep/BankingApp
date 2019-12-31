@@ -1,20 +1,26 @@
 package com.banking.bo;
 
+import com.banking.bo.types.MoneyTransferState;
+
 public class MoneyTransfer {
 	private int id;
 	private int sourceAccountNumber;
 	private int destinationAccountNumber;
 	private double amount;
+	private MoneyTransferState state;
 	
 	public MoneyTransfer() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public MoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount, int id) {
+	public MoneyTransfer(int id, int sourceAccountNumber, int destinationAccountNumber, double amount,
+			MoneyTransferState state) {
 		super();
+		this.id = id;
 		this.sourceAccountNumber = sourceAccountNumber;
 		this.destinationAccountNumber = destinationAccountNumber;
 		this.amount = amount;
-		this.id = id;
+		this.state = state;
 	}
 
 	public int getId() {
@@ -36,7 +42,7 @@ public class MoneyTransfer {
 	public int getDestinationAccountNumber() {
 		return destinationAccountNumber;
 	}
-	
+
 	public void setDestinationAccountNumber(int destinationAccountNumber) {
 		this.destinationAccountNumber = destinationAccountNumber;
 	}
@@ -49,11 +55,22 @@ public class MoneyTransfer {
 		this.amount = amount;
 	}
 
+	public MoneyTransferState getState() {
+		return state;
+	}
+
+	public void setState(MoneyTransferState state) {
+		this.state = state;
+	}
+
 	@Override
 	public String toString() {
-		return "MoneyTransfer [tranferId=" + id + ", sourceAccountNumber=" + sourceAccountNumber
-				+ ", destinationAccountNumber=" + destinationAccountNumber + ", amount=" + amount + "]";
+		return "MoneyTransfer [id=" + id + ", sourceAccountNumber=" + sourceAccountNumber
+				+ ", destinationAccountNumber=" + destinationAccountNumber + ", amount=" + amount + ", state=" + state
+				+ "]";
 	}
+	
+	
 	
 	
 }

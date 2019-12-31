@@ -150,7 +150,6 @@ public class BankingSystem {
 	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
 		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
 		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
-		System.out.println(transfer.getAmount());
 		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
 		if(withdrawalAmount >= 0 && successfulDeposit) {
 			return true;
