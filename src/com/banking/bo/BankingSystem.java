@@ -142,8 +142,8 @@ public class BankingSystem {
 		return false;
 	}
 
-	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) throws DatabaseException, LibraryException {
-		return moneyTransferDAO.viewMoneyTransfers(destinationUserName);
+	public List<MoneyTransfer> viewMoneyTransfers(String userName) throws DatabaseException, LibraryException {
+		return moneyTransferDAO.viewMoneyTransfers(userName);
 	}
 
 	// Given a money transfer id the money will transfer from one account to another

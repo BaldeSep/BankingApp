@@ -15,7 +15,7 @@ public class PostMoneyTransferTest {
 		BankingSystem system = BankingSystem.getInstance();
 		int sourceAccountNumber = 21;
 		int destinationAccountNumber = 12; 
-		double amountToTransfer = 5555.00;
+		double amountToTransfer = 50.00;
 		boolean posted = false;
 		try {
 			posted = system.postMoneyTransfer(sourceAccountNumber, destinationAccountNumber, amountToTransfer);
@@ -23,6 +23,5 @@ public class PostMoneyTransferTest {
 			System.out.println(e.getMessage());
 		}
 		assertEquals(true, posted);
-		
 	}
 }

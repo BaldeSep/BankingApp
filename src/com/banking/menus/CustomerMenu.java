@@ -76,11 +76,8 @@ public class CustomerMenu implements Menu {
 		case Make_Deposit:
 			MakeDepositMenu.getMenu().presentMenu(this);
 			break;
-		case Post_Money_Transfer:
-			log.info(option);
-			break;
-		case Accept_Money_Transfer:
-			log.info(option);
+		case Money_Transfers:
+			MoneyTransferMenu.getMenu().presentMenu(this);
 			break;
 		case Quit:
 			QuitMenu.getMenu().presentMenu();

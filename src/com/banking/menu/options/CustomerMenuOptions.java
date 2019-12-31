@@ -6,8 +6,7 @@ public enum CustomerMenuOptions {
 	View_Balance_Of_Bank_Account, 
 	Make_Withdrawal, 
 	Make_Deposit,  
-	Post_Money_Transfer,
-	Accept_Money_Transfer,
+	Money_Transfers,
 	Quit;
 	public static CustomerMenuOptions fromInt(int value) {
 		switch(value) {
@@ -21,11 +20,9 @@ public enum CustomerMenuOptions {
 			return Make_Withdrawal;
 		case 4:
 			return Make_Deposit;
-		case 5: 
-			return Post_Money_Transfer;
+		case 5:
+			return Money_Transfers;
 		case 6:
-			return Accept_Money_Transfer;
-		case 7:
 			return Quit;
 		}
 		return null;

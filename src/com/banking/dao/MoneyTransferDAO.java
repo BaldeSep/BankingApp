@@ -21,12 +21,7 @@ public class MoneyTransferDAO {
 	public int postMoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) throws DatabaseException, LibraryException {
 		int moneyTransferId = -1;
 		try(Connection connection = OracleDBConnection.getConnection()){
-			String sqlInsertNewMoneyTransfer = 
-					"Begin "
-					+ "Insert Into MoneyTransfer (source_account, destination_account, amount, state) "
-					+ "Values (?, ?, ?, ?) "
-					+ "returning Transfer_Id into ?; "
-					+ "end;";
+			String sqlInsertNewMoneyTransfer = "{call POSTMONEYTRANSFERRETURNID(?,?,?,?,?)}";
 			CallableStatement statementInsertNewMoneyTransfer = connection.prepareCall(sqlInsertNewMoneyTransfer);
 			statementInsertNewMoneyTransfer.setInt(1, sourceAccountNumber);
 			statementInsertNewMoneyTransfer.setInt(2, destinationAccountNumber);
@@ -49,28 +44,29 @@ public class MoneyTransferDAO {
 		return moneyTransferId;
 	}
 
-	public List<MoneyTransfer> viewMoneyTransfers(String destinationUserName) throws DatabaseException, LibraryException {
+	public List<MoneyTransfer> viewMoneyTransfers(String userName) throws DatabaseException, LibraryException {
 		List<MoneyTransfer> moneyTransfers = new ArrayList<>();
 		try(Connection connection = OracleDBConnection.getConnection()){
 			String sqlGetAccountsOfUsers = "Select account_number From BankAccounts Where holder = ?";
 			PreparedStatement statementGetAccountsOfUsers = connection.prepareStatement(sqlGetAccountsOfUsers);
-			statementGetAccountsOfUsers.setString(1, destinationUserName);
+			statementGetAccountsOfUsers.setString(1, userName);
 			ResultSet accountNumbersResults = statementGetAccountsOfUsers.executeQuery();
 			List<Integer> accountNumbers = new ArrayList<>();
 			
 			if(!accountNumbersResults.next()) {
-				throw new DatabaseException("Sorry We Could Not Find Account For Holder: " + destinationUserName);
+				throw new DatabaseException("Sorry We Could Not Find Account For Holder: " + userName);
 			}
 			
 			while(accountNumbersResults.next()) {
 				accountNumbers.add(accountNumbersResults.getInt("account_number"));
 			}
-			String sqlGetAllTransfersForAccount = "Select transfer_id, source_account, destination_account, amount From MoneyTransfer Where destination_account = ?";
+			String sqlGetAllTransfersForAccount = "Select transfer_id, source_account, destination_account, amount From MoneyTransfer Where source_account = ? Or destination_account = ?";
 			PreparedStatement statementGetAllTransfersForAccount = connection.prepareStatement(sqlGetAllTransfersForAccount);
 			ResultSet moneyTransferResults;
 			MoneyTransfer temp;
 			for(int accountNumber: accountNumbers) {
 				statementGetAllTransfersForAccount.setInt(1, accountNumber);
+				statementGetAllTransfersForAccount.setInt(2, accountNumber);
 				moneyTransferResults = statementGetAllTransfersForAccount.executeQuery();
 				
 				while(moneyTransferResults.next()) {
