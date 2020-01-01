@@ -104,15 +104,17 @@ public class BankAccountDAO {
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, userName);
 			ResultSet resultAccounts = statement.executeQuery();
-			if(!resultAccounts.next()) {
-				throw new DatabaseException("Sorry We Couldn't Find Any Accounts For User: " + userName + ". Try Applying For One Today!");
-			}
+			boolean emptyResult = true;
 			while(resultAccounts.next()) {
+				emptyResult = false;
 				BankAccount account = new BankAccount();
 				account.setAccountNumber(resultAccounts.getInt("account_number"));
 				account.setHolder(resultAccounts.getString("holder"));
 				account.setBalance(resultAccounts.getDouble("balance"));
 				accounts.add(account);
+			}
+			if(emptyResult) {
+				throw new DatabaseException("Sorry We Could Not Find The Accounts For User: " + userName);
 			}
 		}catch(ClassNotFoundException e) {
 			log.error(e);

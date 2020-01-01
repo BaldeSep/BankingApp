@@ -106,7 +106,7 @@ public class LoginMenu implements Menu {
 		else if(verifiedUser.getType() == UserType.Customer) {
 			CustomerMenu.getMenu().presentMenu(this);
 		}else if(verifiedUser.getType() == UserType.Employee) {
-			System.out.println("Employee Menu");
+			EmployeeMenu.getMenu().presentMenu(this);
 		}
 	}
 	

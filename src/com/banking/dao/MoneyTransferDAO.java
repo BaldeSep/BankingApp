@@ -53,12 +53,13 @@ public class MoneyTransferDAO {
 			ResultSet accountNumbersResults = statementGetAccountsOfUsers.executeQuery();
 			List<Integer> accountNumbers = new ArrayList<>();
 			
-			if(!accountNumbersResults.next()) {
-				throw new DatabaseException("Sorry We Could Not Find Account For Holder: " + userName);
-			}
-			
+			boolean isEmpty = true;
 			while(accountNumbersResults.next()) {
+				isEmpty = false;
 				accountNumbers.add(accountNumbersResults.getInt("account_number"));
+			}
+			if(isEmpty) {
+				throw new DatabaseException("Sorry We Could Not Find Account For Holder: " + userName);
 			}
 			String sqlGetAllTransfersForAccount = "Select transfer_id, source_account, destination_account, amount, state From MoneyTransfer Where source_account = ? Or destination_account = ?";
 			PreparedStatement statementGetAllTransfersForAccount = connection.prepareStatement(sqlGetAllTransfersForAccount);
