@@ -184,4 +184,8 @@ public class BankingSystem {
 	public List<RequestTicket> viewAccountApplications(String userName) throws LibraryException, DatabaseException{
 		return requestTicketDAO.getTickets(userName);
 	}
+	
+	public boolean approveAccountApplications(int applicationId) throws DatabaseException, LibraryException, BankingSystemException {
+		return requestTicketDAO.approveApplication(applicationId);
+	}
 }

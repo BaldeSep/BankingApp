@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.banking.bo.BankingSystem;
 import com.banking.bo.RequestTicket;
+import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
 import com.banking.menu.options.EvaluateAccountApplicationsOptions;
@@ -68,7 +69,62 @@ public class EvaluateAccountApplications implements Menu {
 	}
 	
 	private void approveAccountApplications() {
+		List<RequestTicket> applications = new ArrayList<>();
+		BufferedReader reader = MenuHelper.getReader();
+		BankingSystem system = BankingSystem.getInstance();
+		String userName = null;
+		int ticketId = -1;
+		do {
+			try {
+				log.info("Enter The User Name Of The Customer To View Their Accounts [Enter Nothing And Press Enter To Quit]");
+				userName = reader.readLine();
+				if(userName.isEmpty()) {
+					break;
+				}
+				applications = system.viewAccountApplications(userName);
+				if(applications.size() == 0) {
+					break;
+				}
+				printApplications(applications);
+				log.info("Enter The ID Of The Applications You Wish To Approve");
+				ticketId = Integer.parseInt(reader.readLine().trim());
+				boolean applicationFound = false;
+				for(RequestTicket application: applications) {
+					if(ticketId == application.getId()) {
+						system.approveAccountApplications(ticketId);
+						applicationFound = true;
+					}
+				}
+				if(!applicationFound) {
+					log.info("Sorry We Could Not Find Application Number: [" + ticketId +"]" );
+				}else {
+					log.info("Account Created For User: [" +  userName + "]");
+					break;
+				}
+			} catch (IOException e) {
+				log.error(e);
+				log.info("Sorry An Error Occured When Reading User Input.");
+			
+			}catch(NumberFormatException e) {
+				log.error(e);
+				log.info("Invalid Input For ID Number");
+			} catch(DatabaseException | LibraryException e) {
+				log.error(e);
+				log.info(e.getMessage());
+			} catch (BankingSystemException e) {
+				log.error(e);
+				log.info(e.getMessage());
+			}
+		}while(true);
 		
+		try {
+			log.info("Press Enter To Go Back To Previous Menu");
+			reader.readLine();
+		}catch(IOException e) {
+			log.error(e);
+		}
+		
+		prevMenu.presentMenu();
 	}
 	
 	private void viewAccountApplications() {
@@ -87,9 +143,7 @@ public class EvaluateAccountApplications implements Menu {
 				if(applications.size() == 0) {
 					break;
 				}
-				for(RequestTicket ticket: applications) {
-					log.info(ticket);
-				}
+				printApplications(applications);
 			} catch (IOException e) {
 				log.error(e);
 				log.info("Sorry An Error Occured When Reading User Input.");
@@ -110,6 +164,12 @@ public class EvaluateAccountApplications implements Menu {
 		
 	}
 	
+	
+	private void printApplications(List<RequestTicket> applications) {
+		for(RequestTicket application: applications) {
+			log.info(application);
+		}
+	}
 	
 	public void presentMenu(Menu prevMenu) {
 		setPreviousMenu(prevMenu);
