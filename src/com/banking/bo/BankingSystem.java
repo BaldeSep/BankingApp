@@ -172,4 +172,9 @@ public class BankingSystem {
 	public List<OneWayLog> viewOneWayTransactions() throws DatabaseException, LibraryException {
 		return oneWayTransactionDAO.getLogs();
 	}
+	
+	public List<MoneyTransferLog> viewMoneyTransferTransactions() throws DatabaseException, LibraryException{
+		return moneyTransferTransactionDAO.getLogs();
+				
+	}
 }

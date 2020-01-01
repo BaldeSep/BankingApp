@@ -2,9 +2,16 @@ package com.banking.menus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.BankingSystem;
+import com.banking.bo.MoneyTransferLog;
+import com.banking.bo.OneWayLog;
+import com.banking.exception.DatabaseException;
+import com.banking.exception.LibraryException;
 import com.banking.menu.options.ViewLogsMenuOptions;
 import com.banking.util.MenuHelper;
 
@@ -64,11 +71,53 @@ public class ViewLogsMenu implements Menu {
 	}
 	
 	private void viewDepositAndWithdrawalLogs() {
-		
+		BankingSystem system = BankingSystem.getInstance();
+		BufferedReader reader = MenuHelper.getReader();
+		List<OneWayLog> logs = new ArrayList<>();
+		try {
+			logs = system.viewOneWayTransactions();
+		} catch (DatabaseException | LibraryException e) {
+			log.error(e);
+		}
+		if(logs.size() > 0) {
+			for(OneWayLog oneWaylog: logs) {
+				log.info(oneWaylog);
+			}
+		}else {
+			log.info("No Logs Available");
+		}
+		try {
+			log.info("Press Enter To Return To Previous Menu");
+			reader.readLine();
+		} catch (IOException e) {
+			log.error(e);
+		}
+		prevMenu.presentMenu();
 	}
 	
 	private void viewMoneyTransferLogs() {
-		
+		BankingSystem system = BankingSystem.getInstance();
+		BufferedReader reader = MenuHelper.getReader();
+		List<MoneyTransferLog> logs = new ArrayList<>();
+		try {
+			logs = system.viewMoneyTransferTransactions();
+		} catch (DatabaseException | LibraryException e) {
+			log.error(e);
+		}
+		if(logs.size() > 0) {
+			for(MoneyTransferLog oneWaylog: logs) {
+				log.info(oneWaylog);
+			}
+		}else {
+			log.info("No Logs Available");
+		}
+		try {
+			log.info("Press Enter To Return To Previous Menu");
+			reader.readLine();
+		} catch (IOException e) {
+			log.error(e);
+		}
+		prevMenu.presentMenu();
 	}
 	
 	public void presentMenu(Menu prevMenu) {
