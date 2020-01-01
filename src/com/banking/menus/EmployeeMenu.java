@@ -61,6 +61,7 @@ public class EmployeeMenu implements Menu {
 			ViewLogsMenu.getMenu().presentMenu(this);
 			break;
 		case Evaluate_Account_Applications:
+			EvaluateAccountApplications.getMenu().presentMenu(this);
 			break;
 		case Quit:
 			QuitMenu.getMenu().presentMenu();

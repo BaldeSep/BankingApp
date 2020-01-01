@@ -10,6 +10,7 @@ import com.banking.dao.BankAccountDAO;
 import com.banking.dao.MoneyTransferDAO;
 import com.banking.dao.MoneyTransferTransactionDAO;
 import com.banking.dao.OneWayTransactionDAO;
+import com.banking.dao.RequestTicketDAO;
 import com.banking.dao.UserDAO;
 import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
@@ -23,6 +24,7 @@ public class BankingSystem {
 	private MoneyTransferDAO moneyTransferDAO;
 	private OneWayTransactionDAO oneWayTransactionDAO;
 	private MoneyTransferTransactionDAO moneyTransferTransactionDAO;
+	private RequestTicketDAO requestTicketDAO;
 	private BankingSystem() {
 		currentUser = null;
 		userDAO = new UserDAO();
@@ -30,6 +32,7 @@ public class BankingSystem {
 		moneyTransferDAO = new MoneyTransferDAO();
 		oneWayTransactionDAO = new OneWayTransactionDAO();
 		moneyTransferTransactionDAO = new MoneyTransferTransactionDAO();
+		requestTicketDAO = new RequestTicketDAO();
 	}
 	
 	public static BankingSystem getInstance() {
@@ -176,5 +179,9 @@ public class BankingSystem {
 	public List<MoneyTransferLog> viewMoneyTransferTransactions() throws DatabaseException, LibraryException{
 		return moneyTransferTransactionDAO.getLogs();
 				
+	}
+	
+	public List<RequestTicket> viewAccountApplications(String userName) throws LibraryException, DatabaseException{
+		return requestTicketDAO.getTickets(userName);
 	}
 }
