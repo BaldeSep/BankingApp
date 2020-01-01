@@ -2,10 +2,16 @@ package com.banking.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.banking.bo.OneWayLog;
+import com.banking.bo.OneWayTransaction;
 import com.banking.bo.types.TransactionType;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
@@ -38,4 +44,45 @@ public class OneWayTransactionDAO {
 		
 		return logSuccess;
 	}
+	public List<OneWayLog> getLogs() throws DatabaseException, LibraryException {
+		List<OneWayLog> logs = new ArrayList<>();
+		try(Connection connection = OracleDBConnection.getConnection()) {
+			String sqlGetLogs = 
+					"Select o.log_id, o.account_number, o.amount, b.holder, o.date_of_transaction, o.transaction_type "
+					+ "From onewaytransactionlog o "
+					+ "Join bankaccounts b "
+					+ "On o.account_number = b.account_number "
+					+ "Order By o.date_of_transaction Desc";
+			PreparedStatement statementGetLogs = connection.prepareStatement(sqlGetLogs);
+			ResultSet setLogs = statementGetLogs.executeQuery();
+			boolean emptyLogs = true;
+			OneWayTransaction tempTransaction;
+			OneWayLog tempLog;
+			while(setLogs.next()) {
+				emptyLogs = false;
+				tempTransaction = new OneWayTransaction();
+				tempTransaction.setAccountNumber(setLogs.getInt("account_number"));
+				tempTransaction.setAmount(setLogs.getDouble("amount"));
+				tempTransaction.setType(TransactionType.fromInt(setLogs.getInt("transaction_type")));
+				tempLog = new OneWayLog();
+				tempLog.setTransaction(tempTransaction);
+				tempLog.setLogId(setLogs.getInt("log_id"));
+				tempLog.setHolder(setLogs.getString("holder"));
+				tempLog.setDateOfTransaction(setLogs.getDate("date_of_transaction"));
+				logs.add(tempLog);
+			}
+			if(emptyLogs) {
+				throw new DatabaseException("Could Not Find Any Logs.");
+			}
+		}catch(SQLException e) {
+			log.error(e);
+			throw new DatabaseException();
+		} catch (ClassNotFoundException e) {
+			log.error(e);
+			throw new LibraryException();
+		}
+		return logs;
+	}
+	
+	
 }

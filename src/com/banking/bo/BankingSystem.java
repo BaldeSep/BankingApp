@@ -1,5 +1,6 @@
 package com.banking.bo;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -166,5 +167,9 @@ public class BankingSystem {
 	// When a Money Transfer Post occurs then this will log it into the database
 	public boolean logMoneyTransfers(final int sourceAccount,final int destinationAccount,final double amount, final int transferId ) throws LibraryException, DatabaseException {
 		return moneyTransferTransactionDAO.logTransaction(sourceAccount, destinationAccount, transferId, amount);
+	}
+
+	public List<OneWayLog> viewOneWayTransactions() throws DatabaseException, LibraryException {
+		return oneWayTransactionDAO.getLogs();
 	}
 }
