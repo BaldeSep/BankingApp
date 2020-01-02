@@ -18,3 +18,10 @@
 2020-01-01 21:03:28 INFO  MenuHelper:21 - 4) Quit
 2020-01-01 21:03:28 INFO  MenuHelper:23 - Enter Any Number Between 0 - 4 Below
 2020-01-01 21:03:30 INFO  QuitMenu:20 - Shutting System Down Have A Good Day!!! :) 
+2020-01-01 21:40:27 INFO  MainMenu:27 - Welcome To Systematic Banking Inc
+2020-01-01 21:40:27 INFO  MenuHelper:21 - 0) Login
+2020-01-01 21:40:27 INFO  MenuHelper:21 - 1) Register
+2020-01-01 21:40:27 INFO  MenuHelper:21 - 2) Quit
+2020-01-01 21:40:27 INFO  MenuHelper:23 - Enter Any Number Between 0 - 2 Below
+2020-01-01 21:40:35 FATAL Main:14 - A Fatal Error Occured During The Excution Of The Program...
+2020-01-01 21:40:35 INFO  QuitMenu:20 - Shutting System Down Have A Good Day!!! :) 
