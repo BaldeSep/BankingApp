@@ -39,14 +39,13 @@ public class MakeWithdrawalMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input. Please Enter A Number Between 0 -" + (menuOptions.length-1));
+					log.error("Invalid Input. Please Enter A Number Between 0 -" + (menuOptions.length-1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading Your Input. Contact Support Soon");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers.");
+				log.error("Invalid Input. Enter Only Whole Numbers.");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -80,17 +79,24 @@ public class MakeWithdrawalMenu implements Menu {
 		boolean accountFound = false;
 		boolean withdrawalMade = false;
 		
+		String tempUserInput = "";
+		
 		if(accounts.size() > 0) {
 			do {
 				try {
 					// Get Account Number From User
-					log.info("Enter The Account Number From The Account You Would Like To Withdrawal From");
+					log.info("Enter The Account Number From The Account You Would Like To Withdrawal From[Enter Nothing And Press Enter To Quit]");
 					// Print All Accounts For User
 					for(BankAccount account: accounts) {
 						log.info(account);
 					}
+					tempUserInput = reader.readLine();
+					if(tempUserInput.isEmpty()) {
+						break;
+					}
+					
 					// Get The Account Number From User Input
-					accountNumber = Integer.parseInt(reader.readLine().trim());
+					accountNumber = Integer.parseInt(tempUserInput.trim());
 					// Search For The Account Within The List
 					for(BankAccount account: accounts) {
 						// If it finds the account break from the for loop
@@ -103,7 +109,7 @@ public class MakeWithdrawalMenu implements Menu {
 					
 					// If the account is not found breaks from outer while loop
 					if(!accountFound) {
-						log.info("Sorry We Could Not Find That Account.");
+						log.error("Sorry We Could Not Find That Account.");
 						break;
 					}
 					
@@ -119,19 +125,17 @@ public class MakeWithdrawalMenu implements Menu {
 					}
 					
 				}catch(IOException e) {
-					log.error(e);
-					log.info("Sorry An Error Occured When Reading Your Input. Try Again Later.");
+					log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+					QuitMenu.getMenu().presentMenu();
 				}catch(NumberFormatException e) {
-					log.error(e);
-					log.info("Sorry We Could Not Find That Account Number: " + accountNumber);
+					log.error("Sorry We Could Not Find That Account Number: " + accountNumber);
 				}catch(BankingSystemException | DatabaseException | LibraryException e) {
-					log.error(e);
-					log.info(e.getMessage());
+					log.error(e.getMessage());
 				}
 			}while(true);
 		}
 		if(!withdrawalMade) {
-			log.info("Sorry We Could Not Complete Your Request Right Now");
+			log.error("Sorry We Could Not Complete Your Request Right Now");
 		}else {
 			accountToWithdrawFrom = getAccount(accountToWithdrawFrom.getAccountNumber());
 			log.info("Withdrawal Amount: $" + moneyWithdrew);
@@ -142,7 +146,8 @@ public class MakeWithdrawalMenu implements Menu {
 			log.info("Please Press Enter To Go Back To Main Menu...");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();
@@ -155,8 +160,7 @@ public class MakeWithdrawalMenu implements Menu {
 		try {
 			account = system.getAccount(accountNumber);
 		} catch (LibraryException | DatabaseException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		return account;
 	}
@@ -173,10 +177,10 @@ public class MakeWithdrawalMenu implements Menu {
 					break;
 				}
 			}catch(IOException e) {
-				log.error(e);
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Valid Decimal Amounts.(Eg. 10.25)");
+				log.error("Invalid Input. Enter Only Valid Decimal Amounts.(Eg. 10.25)");
 			}
 		}while(true);
 		
@@ -189,8 +193,7 @@ public class MakeWithdrawalMenu implements Menu {
 		try {
 			accounts = system.getAccounts(user.getUserName());
 		} catch (LibraryException | DatabaseException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		return accounts;
 	}

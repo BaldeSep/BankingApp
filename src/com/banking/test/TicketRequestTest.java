@@ -37,7 +37,7 @@ public class TicketRequestTest {
 		boolean applicationWasSent = false;
 		try {
 			applicationWasSent = system.applyForBankAccount(ticket);
-		} catch (LibraryException | DatabaseException e) {
+		} catch (BankingSystemException | LibraryException | DatabaseException e) {
 			System.out.println(e.getMessage());
 		}
 		assertEquals(true, applicationWasSent);

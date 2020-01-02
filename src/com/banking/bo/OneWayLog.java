@@ -54,8 +54,8 @@ public class OneWayLog {
 
 	@Override
 	public String toString() {
-		return "OneWayLog [transaction=" + transaction + ", holder=" + holder + ", dateOfTransaction="
-				+ dateOfTransaction + ", logId=" + logId + "]";
+		return "Transaction: [" + transaction + "] Account Holder: [" + holder + "] Date Of Transaction: ["
+				+ dateOfTransaction + "] Log ID: [" + logId + "]";
 	}
 	
 	

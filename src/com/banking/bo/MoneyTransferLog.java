@@ -54,8 +54,8 @@ public class MoneyTransferLog {
 
 	@Override
 	public String toString() {
-		return "MoneyTransferLog [transfer=" + transfer + ", sourceAccountUserName=" + sourceAccountUserName
-				+ ", destinationAccountUserName=" + destinationAccountUserName + ", dateOfTransaction="
+		return "Money Transfer: [" + transfer + "] Source Account User Name: [" + sourceAccountUserName
+				+ "] Desintination Account User Name: [" + destinationAccountUserName + "] Date Of Transaction: ["
 				+ dateOfTransaction + "]";
 	}
 

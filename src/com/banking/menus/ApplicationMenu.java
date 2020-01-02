@@ -41,11 +41,10 @@ public class ApplicationMenu implements Menu {
 					break;
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Whole Numbers Only.");
+				log.error("Invalid Input. Enter Whole Numbers Only.");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -71,14 +70,15 @@ public class ApplicationMenu implements Menu {
 			log.info("Application Successfully Sent!!!");
 			log.info("Check Back Later To See If It Was Accepted...");
 		}else {
-			log.info("Application Failed To Get Sent!!!");
-			log.info("Check Back Later And Try Again, Sorry...");
+			log.error("Application Failed To Get Sent!!!");
+			log.error("Check Back Later And Try Again, Sorry...");
 		}
 		try {
 			log.info("Press Enter To Go Back To The Menu...");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();
@@ -89,7 +89,7 @@ public class ApplicationMenu implements Menu {
 		try {
 			ticket = BankingSystem.getInstance().generateRequestTicket(userName, initialBalance);
 		} catch (BankingSystemException e) {
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		return ticket;
 	}
@@ -108,11 +108,10 @@ public class ApplicationMenu implements Menu {
 					reader.readLine();
 					break;
 				}catch(IOException e) {
-					log.error(e);
-					log.info("Sorry An Error Occured When Reading Input. Please Contact Support");
+					log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+					QuitMenu.getMenu().presentMenu();
 				}catch(NumberFormatException e) {
-					log.error(e);
-					log.info("Invalid Input. Enter Only Whole Numbers");
+					log.error("Invalid Input. Enter Only Valid Decimal Numbers");
 				}
 			}while(true);
 		}
@@ -120,9 +119,8 @@ public class ApplicationMenu implements Menu {
 		boolean successfulApplication =  false;
 		try{
 			successfulApplication = system.applyForBankAccount(ticket);
-		}catch(DatabaseException | LibraryException e) {
-			log.error(e);
-			log.info(e.getMessage());
+		}catch(DatabaseException | LibraryException | BankingSystemException  e) {
+			log.error(e.getMessage());
 		}
 		return successfulApplication;
 	}

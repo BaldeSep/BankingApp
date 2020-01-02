@@ -46,11 +46,10 @@ public class MakeDepositMenu implements Menu{
 				}
 				
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading Your Input. Try Again Later");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers");
+				log.error("Invalid Input. Enter Only Whole Numbers");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -83,15 +82,20 @@ public class MakeDepositMenu implements Menu{
 		boolean depositSuccess = false;
 		boolean accountFound = false;
 		
+		String tempUserInput = "";
 		
 		if(accounts.size() > 0) {
 			do {
 				try {
-					log.info("Please Enter The Account Number To Deposit Into...");
+					log.info("Please Enter The Account Number To Deposit Into...[Enter Nothing and Press Enter To Quit]");
 					for(BankAccount account: accounts ) {
 						log.info(account);
 					}
-					int accountNumber = Integer.parseInt(reader.readLine().trim());
+					tempUserInput = reader.readLine();
+					if(tempUserInput.isEmpty()) {
+						break;
+					}
+					int accountNumber = Integer.parseInt(tempUserInput.trim());
 					for(BankAccount account: accounts) {
 						if(accountNumber == account.getAccountNumber()) {
 							accountFound = true;
@@ -100,7 +104,7 @@ public class MakeDepositMenu implements Menu{
 						}
 					}
 					if(!accountFound) {
-						log.info("Sorry We Could Not Find Account Number: " + accountNumber + ". Try Again...");
+						log.error("Sorry We Could Not Find Account Number: " + accountNumber + ". Try Again...");
 						continue;
 					}
 					
@@ -111,19 +115,17 @@ public class MakeDepositMenu implements Menu{
 					if(depositSuccess) {
 						break;
 					}else {
-						log.info("Sorry We Could Not Deposit The Money Try Again Later...");
+						log.error("Sorry We Could Not Deposit The Money Try Again Later...");
 						break;
 					}
 					
 				} catch (IOException e) {
-					log.error(e);
-					log.info("Sorry An Error Occured When Getting User Input");
+					log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+					QuitMenu.getMenu().presentMenu();
 				}catch(NumberFormatException e) {
-					log.error(e);
-					log.info("Invalid Input. Enter Only Whole Numbers");
+					log.error("Invalid Input. Enter Only Whole Numbers");
 				}catch(DatabaseException | LibraryException | BankingSystemException e) {
-					log.error(e);
-					log.info(e.getMessage());
+					log.error(e.getMessage());
 				}
 			}while(true);
 			
@@ -137,11 +139,11 @@ public class MakeDepositMenu implements Menu{
 			}
 			log.info("Please Press Enter To Go Back To The Main Menu");
 			reader.readLine();
-		}catch(IOException | LibraryException | DatabaseException e) {
-			log.error(e);
-			if(e instanceof LibraryException || e instanceof DatabaseException ) {
-				log.error(e.getMessage());
-			}
+		}catch(LibraryException | DatabaseException e) {
+			log.error(e.getMessage());
+		}catch(IOException e) {
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 		

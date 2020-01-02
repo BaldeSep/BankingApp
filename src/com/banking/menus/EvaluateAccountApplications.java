@@ -40,14 +40,13 @@ public class EvaluateAccountApplications implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input Only Enter Numbers Between 0-" + (menuOptions.length - 1));
+					log.error("Invalid Input Only Enter Numbers Between 0-" + (menuOptions.length - 1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input.");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers");
+				log.error("Invalid Input. Enter Only Whole Numbers");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -96,24 +95,18 @@ public class EvaluateAccountApplications implements Menu {
 					}
 				}
 				if(!applicationFound) {
-					log.info("Sorry We Could Not Find Application Number: [" + ticketId +"]" );
+					log.error("Sorry We Could Not Find Application Number: [" + ticketId +"]" );
 				}else {
 					log.info("Account Created For User: [" +  userName + "]");
 					break;
 				}
 			} catch (IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input.");
-			
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input For ID Number");
-			} catch(DatabaseException | LibraryException e) {
-				log.error(e);
-				log.info(e.getMessage());
-			} catch (BankingSystemException e) {
-				log.error(e);
-				log.info(e.getMessage());
+				log.error("Invalid Input For ID Number");
+			} catch(BankingSystemException | DatabaseException | LibraryException e) {
+				log.error(e.getMessage());
 			}
 		}while(true);
 		
@@ -121,7 +114,8 @@ public class EvaluateAccountApplications implements Menu {
 			log.info("Press Enter To Go Back To Previous Menu");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();
@@ -145,11 +139,10 @@ public class EvaluateAccountApplications implements Menu {
 				}
 				printApplications(applications);
 			} catch (IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input.");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			} catch(DatabaseException | LibraryException e) {
-				log.error(e);
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			}
 		}while(true);
 		
@@ -157,7 +150,8 @@ public class EvaluateAccountApplications implements Menu {
 			log.info("Press Enter To Go Back To Previous Menu");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();

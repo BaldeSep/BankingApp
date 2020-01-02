@@ -16,7 +16,7 @@ import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class MoneyTransferDAO {
-	private static final Logger log = Logger.getLogger(MoneyTransferDAO.class);
+	// private static final Logger log = Logger.getLogger(MoneyTransferDAO.class);
 	
 	public int postMoneyTransfer(int sourceAccountNumber, int destinationAccountNumber, double amount) throws DatabaseException, LibraryException {
 		int moneyTransferId = -1;
@@ -35,10 +35,8 @@ public class MoneyTransferDAO {
 				throw new DatabaseException("Sorry There Was An Error Posting Your Money Transfer Try Contacting Support Or Trying A Different Set Of Accounts");
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return moneyTransferId;
@@ -81,10 +79,8 @@ public class MoneyTransferDAO {
 				}
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return moneyTransfers;
@@ -128,10 +124,8 @@ public class MoneyTransferDAO {
 			}
 			
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return transfer;

@@ -42,8 +42,8 @@ public class MoneyTransferTransaction {
 
 	@Override
 	public String toString() {
-		return "MoneyTransferTransaction [sourceAccount=" + sourceAccount + ", destinationAccount=" + destinationAccount
-				+ ", amount=" + amount + "]";
+		return "Source Account: [" + sourceAccount + "] Destination Account: [" + destinationAccount
+				+ "] Amount: [$" + amount + "]";
 	}
 	
 }

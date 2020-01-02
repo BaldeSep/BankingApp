@@ -14,9 +14,7 @@ import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class UserDAO {
-	private static final Logger log = Logger.getLogger(UserDAO.class);
-	
-	public UserDAO() {}
+	// private static final Logger log = Logger.getLogger(UserDAO.class);
 	
 	// Register User and add them into the Database
 	public boolean registerUser(String userName, String password, UserType type) throws DatabaseException, LibraryException {
@@ -36,10 +34,8 @@ public class UserDAO {
 				userInserted = true;
 			}
 		} catch (ClassNotFoundException e) {
-			log.error(e); 
 			throw new LibraryException("Sorry There Was An Unforseen Error That We Can't Recover From Try Again Later");
 		} catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException("Sorry There Was An Issue With The Registration Process, Try Registering With A Different User Name.");
 		}
 		return userInserted;
@@ -66,15 +62,11 @@ public class UserDAO {
 					verifiedUser = new User(userName, password, UserType.Employee);
 				}
 			}else {
-				DatabaseException databaseException = new DatabaseException("Sorry We Could Not Verify That User: " + userName + " Exists, Try Again With Different Credentials");
-				log.error(databaseException);
-				throw databaseException;
+				throw new DatabaseException("Sorry We Could Not Verify That User: " + userName + " Exists, Try Again With Different Credentials");
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException("Sorry There Was An Unforseen Error That We Can't Recover From Try Again Later");
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException("Sorry There Was An Issue Trying To Verify Your Credientials. Try Again Later.");
 		}
 		

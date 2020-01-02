@@ -7,8 +7,6 @@ import org.apache.log4j.Logger;
 
 import com.banking.bo.BankingSystem;
 import com.banking.bo.User;
-import com.banking.exception.DatabaseException;
-import com.banking.exception.LibraryException;
 import com.banking.menu.options.CustomerMenuOptions;
 import com.banking.util.MenuHelper;
 
@@ -30,7 +28,7 @@ public class CustomerMenu implements Menu {
 		BankingSystem system = BankingSystem.getInstance();
 		User currentUser = system.getActiveUser();
 		CustomerMenuOptions menuOptions[] = CustomerMenuOptions.values();
-		int userInput = -1;
+		int userInput = 0;
 		log.info("Hello " + currentUser.getUserName());
 		do {
 			try {
@@ -39,14 +37,13 @@ public class CustomerMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input, Enter Numbers Between 0" + "-" + (menuOptions.length - 1));
+					log.error("Invalid Input, Enter Numbers Between 0-" + (menuOptions.length - 1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading Your Input. Please Contact Support.");
+				log.fatal("Sorry An Error Occured When Reading Your Input. Please Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invlid Input Enter Only Whole Numbers");
+				log.error("Invalid Input Enter Only Whole Numbers");
 			}
 		}while(true);
 		
@@ -93,7 +90,8 @@ public class CustomerMenu implements Menu {
 		try {
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("There Was An Error When Reading User Input");
+			QuitMenu.getMenu().presentMenu();
 		}
 		MainMenu.getMenu().presentMenu();
 	}

@@ -17,7 +17,7 @@ import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class BankAccountDAO {
-	private static final Logger log = Logger.getLogger(BankAccountDAO.class);
+	// private static final Logger log = Logger.getLogger(BankAccountDAO.class);
 	
 	// Create A Bank Account With An Initial Balance Of $0.00
 	public boolean createBankAccount(final String userName) throws LibraryException, DatabaseException {
@@ -34,10 +34,8 @@ public class BankAccountDAO {
 				createdAccount = true;
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException("Sorry There Was An Error When Creating Your Account, Try Again Later and Please Report To Customer Support");
 		}
 		
@@ -60,10 +58,8 @@ public class BankAccountDAO {
 				createdAccount = true;
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException("Sorry There Was An Issue Creating Your Bank Account, Contact Support.");
 		}
 		
@@ -86,10 +82,8 @@ public class BankAccountDAO {
 				applicationSent = true;
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		
@@ -117,10 +111,8 @@ public class BankAccountDAO {
 				throw new DatabaseException("Sorry We Could Not Find The Accounts For User: " + userName);
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException("Sorry There Was An Issue Finding Your Accounts Contact Support.");
 		}
 		return accounts;
@@ -143,10 +135,8 @@ public class BankAccountDAO {
 				throw new DatabaseException("Sorry We Couldn't Find That Account Number. Try Another One");
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return account;
@@ -179,10 +169,8 @@ public class BankAccountDAO {
 				throw new DatabaseException("Sorry There Was An Error Making This Deposit. Try Again With A Differend Account");
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return successfulDeposit;
@@ -217,10 +205,8 @@ public class BankAccountDAO {
 				throw new DatabaseException("Error Removing Funds With Account");
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return moneyWithdrawn;

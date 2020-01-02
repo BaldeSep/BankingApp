@@ -43,7 +43,7 @@ public class RequestTicket {
 	}
 	@Override
 	public String toString() {
-		return "RequestTicket [id=" + id + ", userName=" + userName + ", initialBalance=" + initialBalance + "]";
+		return "Application ID: [" + id + "] User Name: [" + userName + "] Initial Balance: [$" + initialBalance + "]";
 	}
 	
 	

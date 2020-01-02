@@ -40,11 +40,13 @@ public class ViewBalanceMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input Must Be Between 0" + "-" + (menuOptions.length - 1));
+					log.error("Invalid Input Must Be Between 0" + "-" + (menuOptions.length - 1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading Your Input. Contact Support Soon.");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
+			}catch(NumberFormatException e) {
+				log.error("Invalid Input. Only Enter Whole Numbers");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -82,7 +84,8 @@ public class ViewBalanceMenu implements Menu {
 			log.info("Press Enter To Return To The Previous Menu");
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();
@@ -99,14 +102,13 @@ public class ViewBalanceMenu implements Menu {
 			}
 			int userInput = -1;
 			try {
-				log.info("Please Enter One Of The Account Numbers Above To Get The Balance...");
-				log.info("Enter Below Here..");
+				log.info("Please Enter One Of The Account Numbers Above To Get The Balance...[Enter Nothing And Press Enter To Quit]");
 				userInput = Integer.parseInt(reader.readLine().trim());
 			}catch(IOException e) {
-				log.error(e);
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input");
+				log.error("Invalid Input Must Be A Whole Number");
 			}
 			boolean accountFound = false;
 			for(BankAccount account: accounts) {
@@ -117,14 +119,15 @@ public class ViewBalanceMenu implements Menu {
 			}
 			
 			if(!accountFound) {
-				log.info("Sorry We Could Not Find That Account...");
+				log.error("Sorry We Could Not Find That Account...");
 			}
 		}
 		try {
 			log.info("Please Press Enter To Go Back To The Previous Menu...");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}
@@ -135,8 +138,7 @@ public class ViewBalanceMenu implements Menu {
 		try {
 			accounts = system.getAccounts(user.getUserName());
 		} catch (LibraryException | DatabaseException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		
 		return accounts;

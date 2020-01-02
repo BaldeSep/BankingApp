@@ -1,17 +1,14 @@
 package com.banking.dao;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.banking.bo.BankAccount;
 import com.banking.bo.RequestTicket;
 import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
@@ -20,7 +17,7 @@ import com.banking.util.OracleDBConnection;
 
 
 public class RequestTicketDAO {
-	private static final Logger log = Logger.getLogger(RequestTicketDAO.class);
+	// private static final Logger log = Logger.getLogger(RequestTicketDAO.class);
 	public List<RequestTicket> getTickets(String userName) throws LibraryException, DatabaseException{
 		List<RequestTicket> applications = new ArrayList<>(); 
 		try(Connection connection = OracleDBConnection.getConnection()){
@@ -45,10 +42,8 @@ public class RequestTicketDAO {
 				throw new DatabaseException("No Applications Found For User: ["   + userName + "]");
 			}
 		} catch (ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		} catch (SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return applications;
@@ -91,10 +86,8 @@ public class RequestTicketDAO {
 			}
 			
 		} catch (ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		} catch (SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return accountCreated;

@@ -44,7 +44,7 @@ public class OneWayTransaction {
 
 	@Override
 	public String toString() {
-		return "OneWayTransaction [type=" + type + ", accountNumber=" + accountNumber + ", amount=" + amount + "]";
+		return "Type Of Transaction: [" + type + "] Account Number: [" + accountNumber + "] Amount: [$" + amount + "]";
 	}
 	
 	

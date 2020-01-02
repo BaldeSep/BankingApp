@@ -16,7 +16,7 @@ import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class MoneyTransferTransactionDAO {
-	private static final Logger log = Logger.getLogger(MoneyTransferDAO.class); 
+	// private static final Logger log = Logger.getLogger(MoneyTransferDAO.class); 
 	public boolean logTransaction(int sourceAccount, int destinationAccount, int transferId, double amount) throws LibraryException, DatabaseException {
 		boolean logSuccessful = false;
 		try(Connection connection = OracleDBConnection.getConnection()){
@@ -31,13 +31,11 @@ public class MoneyTransferTransactionDAO {
 			if(countUpdates == 1) {
 				logSuccessful = true;
 			}else {
-				log.error(new DatabaseException("Improper Number of Updates Performed. Number of Updates: " + countUpdates));
+				throw new DatabaseException("Improper Number of Updates Performed. Number of Updates: " + countUpdates);
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		return logSuccessful;
@@ -80,10 +78,8 @@ public class MoneyTransferTransactionDAO {
 			
 			
 		} catch (ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		} catch (SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		

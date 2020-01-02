@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.banking.bo.BankingSystem;
 import com.banking.bo.types.UserType;
+import com.banking.exception.BankingSystemException;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
 import com.banking.menu.options.RegisterMenuOptions;
@@ -34,14 +35,13 @@ public class RegisterMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Please Enter Numbers Between: " + 0 + "-" + (menuOptions.length-1));
+					log.error("Please Enter Numbers Between: " + 0 + "-" + (menuOptions.length-1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry There Was An Error When Getting Your Input Contact Support");
+				log.fatal("Sorry There Was An Error When Getting Your Input Contact Support");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers.");
+				log.error("Invalid Input. Enter Only Whole Numbers.");
 			}
 		}while(true);
 		
@@ -85,11 +85,10 @@ public class RegisterMenu implements Menu {
 					break;
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry There Was An Error When Trying To Read Your Input Contact Support");
-			}catch(DatabaseException | LibraryException e) {
-				log.info(e.getMessage());
-				log.error(e);
+				log.fatal("Sorry There Was An Error When Trying To Read Your Input Contact Support");
+				QuitMenu.getMenu().presentMenu();
+			}catch(BankingSystemException | DatabaseException | LibraryException e) {
+				log.error(e.getMessage());
 			}
 		}while(true);
 		
@@ -98,13 +97,14 @@ public class RegisterMenu implements Menu {
 		}else if(registerSuccessful && type == UserType.Employee) {
 			log.info("Registered Employee: " + userName);
 		}else {
-			log.info("Sorry There Was An Issue Registering User: " + userName + ". Contact Support As Soon As Possible");
+			log.error("Sorry There Was An Issue Registering User: " + userName + ". Contact Support As Soon As Possible");
 		}
 		try {
 			log.info("Please Press Enter To Return To The Main Menu...");
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("Sorry There Was An Error When Trying To Read Your Input Contact Support");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}

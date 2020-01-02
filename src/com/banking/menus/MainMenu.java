@@ -23,7 +23,7 @@ public class MainMenu implements Menu {
 		BufferedReader reader = MenuHelper.getReader();
 		MainMenuOptions menuOptions[] = MainMenuOptions.values();
 		
-		int userInput = -1;
+		int userInput = 0;
 		log.info("Welcome To The Banking System");
 		do {
 			try {
@@ -32,15 +32,14 @@ public class MainMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Number Input");
+					log.error("Invalid Number Input");
 				}
 				
 			} catch (IOException e) {
-				log.info("Sorry An Error Occured When Reading Your Input Contact Support.");
-				log.error(e);
+				log.fatal("Sorry An Error Occured When Reading Your Input Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			} catch(NumberFormatException e) {
-				log.info("Invalid Input: Please Enter Only Integers");
-				log.error(e);
+				log.error("Invalid Input: Please Enter Only Integers");
 			}
 		}while(true);
 		parseUserInput(userInput);

@@ -41,14 +41,13 @@ public class MoneyTransferMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input. Enter Numbers Between 0-" +  (menuOptions.length - 1));
+					log.error("Invalid Input. Enter Numbers Between 0-" +  (menuOptions.length - 1));
 				}
 			} catch (IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			} catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Whole Numbers Only");
+				log.error("Invalid Input. Enter Whole Numbers Only");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -77,8 +76,7 @@ public class MoneyTransferMenu implements Menu {
 		try {
 			accounts = system.getAccounts(user.getUserName());
 		} catch (LibraryException | DatabaseException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		return accounts;
 		
@@ -96,12 +94,17 @@ public class MoneyTransferMenu implements Menu {
 		User activeUser = system.getActiveUser();
 		List<BankAccount> accounts = getAccounts(activeUser);
 		boolean successfulPost = false;
+		String tempUserInput = "";
 		if(accounts != null && accounts.size() > 0) {
 			do {
 				try {
-					log.info("Enter A Source Account To Send Money From...");
+					log.info("Enter A Source Account To Send Money From...[Enter Nothing An Press Enter To Quit]");
 					printAccounts(accounts);
-					int sourceAccountNumber = Integer.parseInt(reader.readLine().trim());
+					tempUserInput = reader.readLine();
+					if(tempUserInput.isEmpty()) {
+						break;
+					}
+					int sourceAccountNumber = Integer.parseInt(tempUserInput.trim());
 					log.info("Enter A Destination Account To Send Money To...");
 					int destinationAccountNumber = Integer.parseInt(reader.readLine().trim());
 					log.info("Enter An Amount Of Money To Send...");
@@ -110,16 +113,15 @@ public class MoneyTransferMenu implements Menu {
 					if(successfulPost) {
 						break;
 					}else {
-						log.info("Sorry There Was An Error When Making Your Post.");
+						log.error("Sorry There Was An Error When Making Your Post.");
 					}
 				}catch(IOException e) {	
-					log.error(e);
-					log.info("Sorry An Error Occured When Getting User Input");
+					log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+					QuitMenu.getMenu().presentMenu();
 				}catch(NumberFormatException e) {
-					log.error(e);
-					log.info("Invalid Input.");
+					log.error("Invalid Input.");
 				} catch (BankingSystemException | DatabaseException | LibraryException e) {
-					log.info(e.getMessage());
+					log.error(e.getMessage());
 				}
 				
 			}while(true);
@@ -133,7 +135,8 @@ public class MoneyTransferMenu implements Menu {
 			log.info("Please Press Enter To Go Back To The Main Menu");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}
@@ -142,28 +145,31 @@ public class MoneyTransferMenu implements Menu {
 		BankingSystem system = BankingSystem.getInstance();
 		BufferedReader reader = MenuHelper.getReader();
 		User activeUser = system.getActiveUser();
+		String tempUserInput = "";
 		boolean transferAccepted = false;
 		try {
-			log.info("Enter The Transfer Id That You Wish To Accept");
+			log.info("Enter The Transfer Id That You Wish To Accept[Enter Nothing And Press Enter To Quit]");
 			List<MoneyTransfer> transfers = system.viewMoneyTransfers(activeUser.getUserName());
 			printAllTransfers(activeUser, transfers);
-			int transferId = Integer.parseInt(reader.readLine().trim());
-			transferAccepted = system.acceptMoneyTransfer(transferId);
+			tempUserInput = reader.readLine();
+			if(!tempUserInput.isEmpty()) {
+				int transferId = Integer.parseInt(tempUserInput.trim());
+				transferAccepted = system.acceptMoneyTransfer(transferId);
+			}
 		}catch(IOException e) {
-			log.error(e);
-			log.info("Sorry An Error Occured When Reading User Input");
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}catch(NumberFormatException e) {
-			log.error(e);
-			log.info("invalid Input Enter A Whole Number");
+			log.error("invalid Input Enter A Whole Number");
 		}catch(DatabaseException | LibraryException | BankingSystemException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}	
 		try {
 			log.info("Press Enter To Return To Main Menu...");
 			reader.readLine();			
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 		
@@ -178,14 +184,14 @@ public class MoneyTransferMenu implements Menu {
 			List<MoneyTransfer> transfers = system.viewMoneyTransfers(activeUser.getUserName());
 			printAllTransfers(activeUser, transfers);
 		}catch(DatabaseException | LibraryException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		try {
 			log.info("Press Enter To Return To Main Menu...");
 			reader.readLine();			
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}

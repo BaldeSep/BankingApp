@@ -40,14 +40,13 @@ public class ViewCustomerAccountsMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input. Enter A Number Between 0-" + (menuOptions.length - 1));
+					log.error("Invalid Input. Enter A Number Between 0-" + (menuOptions.length - 1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input.");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers.");
+				log.error("Invalid Input. Enter Only Whole Numbers.");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -83,21 +82,21 @@ public class ViewCustomerAccountsMenu implements Menu {
 					log.info(account);
 				}
 			}else {
-				log.info("Sorry The User " + userName + " Does Not Seem To Have Any Accounts With Us...");
+				log.error("Sorry The User " + userName + " Does Not Seem To Have Any Accounts With Us...");
 			}
 		} catch (IOException e) {
-			log.error(e);
-			log.info("Sorry An Error Occured While Reading User Input.");
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		} catch ( DatabaseException | LibraryException e) {
-			log.error(e);
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
 		
 		try {
 			log.info("Please Press Enter To Go Back To The Main Menu");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();
@@ -134,22 +133,20 @@ public class ViewCustomerAccountsMenu implements Menu {
 						}
 					}
 					if(!accountFound) {
-						log.info("Sorry We Could Not Find Account: " + accountNumber);
+						log.error("Sorry We Could Not Find Account: " + accountNumber);
 					}else {
 						break;
 					}
 				}else {
-					log.info("Sorry We Could Not Find The Accounts For User: " + userName);
+					log.error("Sorry We Could Not Find The Accounts For User: " + userName);
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(DatabaseException | LibraryException e) {
-				log.error(e);
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Must Be A Whole Number.");
+				log.error("Invalid Input. Must Be A Whole Number.");
 			}
 		}while(true);
 		
@@ -157,7 +154,8 @@ public class ViewCustomerAccountsMenu implements Menu {
 			log.info("Please Press Enter To Return To The Main Menu");
 			reader.readLine();
 		}catch(IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		
 		prevMenu.presentMenu();

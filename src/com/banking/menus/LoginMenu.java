@@ -35,13 +35,13 @@ public class LoginMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Number Input");
+					log.error("Invalid Number Input");
 				}
 			}catch(IOException e) {
-				log.error("Sorry An Error Occured When Reading Your Input Contact Support.");
+				log.fatal("Sorry An Error Occured When Reading Your Input Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input: Please Enter An Integer");
+				log.error("Invalid Input: Please Enter An Integer");
 			}
 		}while(true);
 		parseUserInput(userInput);
@@ -87,11 +87,10 @@ public class LoginMenu implements Menu {
 					break;
 				}
 			}catch(IOException e) {
-				log.info("Sorry There Was An Issue Readin Your Input. Try Contacting Support");
-				log.error(e);
+				log.fatal("Sorry There Was An Issue Reading Your Input");
+				QuitMenu.getMenu().presentMenu();
 			}catch(DatabaseException | LibraryException e) {
-				log.info(e.getMessage());
-				log.error(e);
+				log.error(e.getMessage());
 			}
 			if(triesLeft == 0) {
 				break;
@@ -101,6 +100,13 @@ public class LoginMenu implements Menu {
 		
 		if(triesLeft <= 0) {
 			log.info("Too Many Failed Attempts Try Again Later.");
+			log.info("Press Enter To Go Back To Previous Menu...");
+			try {
+				reader.readLine();
+			} catch (IOException e) {
+				log.fatal("Sorry An Error Occured When Reading User Input");
+				QuitMenu.getMenu().presentMenu();
+			}
 			prevMenu.presentMenu();
 		}
 		else if(verifiedUser.getType() == UserType.Customer) {

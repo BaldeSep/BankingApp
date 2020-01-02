@@ -65,9 +65,8 @@ public class MoneyTransfer {
 
 	@Override
 	public String toString() {
-		return "MoneyTransfer [id=" + id + ", sourceAccountNumber=" + sourceAccountNumber
-				+ ", destinationAccountNumber=" + destinationAccountNumber + ", amount=" + amount + ", state=" + state
-				+ "]";
+		return "Money Transfer ID: [" + id + "] Source Account Number: [" + sourceAccountNumber
+				+ "] Destination Account Number : [" + destinationAccountNumber + "] Amount: [$" + amount + "] State: [" + state + "]";
 	}
 	
 	

@@ -45,7 +45,10 @@ public class BankingSystem {
 	}
 	
 	// Add user's user name and password into the database
-	public boolean registerUser(final String userName, final String password, final UserType type) throws DatabaseException, LibraryException {
+	public boolean registerUser(final String userName, final String password, final UserType type) throws DatabaseException, LibraryException, BankingSystemException {
+		if(userName == null || password == null || userName.trim().isEmpty() || password.trim().isEmpty()) {
+			throw new BankingSystemException("User Name And Password Cannot Be Empty");
+		}
 		return userDAO.registerUser(userName, password, type);
 	}
 	
@@ -53,7 +56,7 @@ public class BankingSystem {
 	public User verifyUserCredentials(final String userName, final String password) throws DatabaseException, LibraryException {
 		// If the user entered Valid Credentials save their userName locally.
 		// This can be used as a sort of session;
-		User verifiedUser = userDAO.verifyUserCredentials(userName, password); 
+		User verifiedUser = userDAO.verifyUserCredentials(userName.trim(), password.trim()); 
 		if(verifiedUser != null) {
 			currentUser = verifiedUser;
 		}
@@ -90,7 +93,10 @@ public class BankingSystem {
 	}
 	
 	// Give a request ticket and then it will be added to the database
-	public boolean applyForBankAccount(final RequestTicket ticket) throws LibraryException, DatabaseException {
+	public boolean applyForBankAccount(final RequestTicket ticket) throws LibraryException, DatabaseException, BankingSystemException {
+		if(ticket == null) {
+			throw new BankingSystemException("Invalid Ticket. Application Not Created Correctly");
+		}
 		return bankAccountDAO.applyForBankAccount(ticket);
 	}
 	
@@ -153,6 +159,9 @@ public class BankingSystem {
 	// Given a money transfer id the money will transfer from one account to another
 	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
 		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
+		if(transfer == null) {
+			throw new DatabaseException("Error Could Not Process Money Transfer");
+		}
 		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
 		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
 		if(withdrawalAmount >= 0 && successfulDeposit) {

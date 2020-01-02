@@ -40,14 +40,13 @@ public class ViewLogsMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input. Number Must Be Between 0-" + (menuOptions.length - 1) );
+					log.error("Invalid Input. Number Must Be Between 0-" + (menuOptions.length - 1) );
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Occured When Reading User Input");
+				log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers");
+				log.error("Invalid Input. Enter Only Whole Numbers");
 			}
 		}while(true);
 		
@@ -77,7 +76,7 @@ public class ViewLogsMenu implements Menu {
 		try {
 			logs = system.viewOneWayTransactions();
 		} catch (DatabaseException | LibraryException e) {
-			log.error(e);
+			log.error(e.getMessage());
 		}
 		if(logs.size() > 0) {
 			for(OneWayLog oneWaylog: logs) {
@@ -90,7 +89,8 @@ public class ViewLogsMenu implements Menu {
 			log.info("Press Enter To Return To Previous Menu");
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}
@@ -102,7 +102,7 @@ public class ViewLogsMenu implements Menu {
 		try {
 			logs = system.viewMoneyTransferTransactions();
 		} catch (DatabaseException | LibraryException e) {
-			log.error(e);
+			log.error(e.getMessage());
 		}
 		if(logs.size() > 0) {
 			for(MoneyTransferLog oneWaylog: logs) {
@@ -115,7 +115,8 @@ public class ViewLogsMenu implements Menu {
 			log.info("Press Enter To Return To Previous Menu");
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
+			QuitMenu.getMenu().presentMenu();
 		}
 		prevMenu.presentMenu();
 	}

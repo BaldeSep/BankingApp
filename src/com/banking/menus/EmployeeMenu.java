@@ -35,14 +35,13 @@ public class EmployeeMenu implements Menu {
 				if(userInput >= 0 && userInput <= menuOptions.length - 1) {
 					break;
 				}else {
-					log.info("Invalid Input. Enter A Number Between 0-" + (menuOptions.length - 1));
+					log.error("Invalid Input. Enter A Number Between 0-" + (menuOptions.length - 1));
 				}
 			}catch(IOException e) {
-				log.error(e);
-				log.info("Sorry An Error Ocurred While Getting User Input");
+				log.fatal("Sorry An Error Ocurred While Getting User Input");
+				QuitMenu.getMenu().presentMenu();
 			}catch(NumberFormatException e) {
-				log.error(e);
-				log.info("Invalid Input. Enter Only Whole Numbers.");
+				log.error("Invalid Input. Enter Only Whole Numbers.");
 			}
 			
 		}while(true);
@@ -75,7 +74,8 @@ public class EmployeeMenu implements Menu {
 		try {
 			reader.readLine();
 		} catch (IOException e) {
-			log.error(e);
+			log.fatal("Sorry An Error Ocurred While Getting User Input");
+			QuitMenu.getMenu().presentMenu();
 		}
 		MainMenu.getMenu().presentMenu();
 	}

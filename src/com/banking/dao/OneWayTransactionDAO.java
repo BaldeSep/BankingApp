@@ -18,7 +18,7 @@ import com.banking.exception.LibraryException;
 import com.banking.util.OracleDBConnection;
 
 public class OneWayTransactionDAO {
-	private static final Logger log = Logger.getLogger(OneWayTransactionDAO.class);
+	// private static final Logger log = Logger.getLogger(OneWayTransactionDAO.class);
 	public boolean logTransaction(TransactionType type, int accountNumber, double amount) throws LibraryException, DatabaseException {
 		boolean logSuccess = false;
 		try(Connection connection = OracleDBConnection.getConnection()){
@@ -32,13 +32,11 @@ public class OneWayTransactionDAO {
 			if(countUpdates == 1) {
 				logSuccess = true;
 			}else {
-				log.error(new DatabaseException("An Improper Number of Entries Were Updated. Number Updated: " + countUpdates));
+				throw new DatabaseException("An Improper Number of Entries Were Updated. Number Updated: " + countUpdates);
 			}
 		}catch(ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		}
 		
@@ -75,10 +73,8 @@ public class OneWayTransactionDAO {
 				throw new DatabaseException("Could Not Find Any Logs.");
 			}
 		}catch(SQLException e) {
-			log.error(e);
 			throw new DatabaseException();
 		} catch (ClassNotFoundException e) {
-			log.error(e);
 			throw new LibraryException();
 		}
 		return logs;
