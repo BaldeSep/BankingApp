@@ -146,7 +146,7 @@ public class MoneyTransferMenu implements Menu {
 		BufferedReader reader = MenuHelper.getReader();
 		User activeUser = system.getActiveUser();
 		String tempUserInput = "";
-		boolean transferAccepted = false;
+		MoneyTransfer acceptedTransfer = null;
 		try {
 			log.info("Enter The Transfer Id That You Wish To Accept[Enter Nothing And Press Enter To Quit]");
 			List<MoneyTransfer> transfers = system.viewMoneyTransfers(activeUser.getUserName());
@@ -154,7 +154,7 @@ public class MoneyTransferMenu implements Menu {
 			tempUserInput = reader.readLine();
 			if(!tempUserInput.isEmpty()) {
 				int transferId = Integer.parseInt(tempUserInput.trim());
-				transferAccepted = system.acceptMoneyTransfer(transferId);
+				acceptedTransfer = system.acceptMoneyTransfer(transferId);
 			}
 		}catch(IOException e) {
 			log.fatal("Sorry An Error Occured  When Getting Your Input. Contact Support.");
@@ -165,6 +165,11 @@ public class MoneyTransferMenu implements Menu {
 			log.error(e.getMessage());
 		}	
 		try {
+			if(acceptedTransfer != null) {
+				log.info("Transfer Accepted From Account " + acceptedTransfer.getSourceAccountNumber() + " To Account " + acceptedTransfer.getDestinationAccountNumber());
+				log.info("For The Amount Of: " + acceptedTransfer.getAmount());
+			}
+			
 			log.info("Press Enter To Return To Main Menu...");
 			reader.readLine();			
 		}catch(IOException e) {

@@ -24,7 +24,7 @@ public class MainMenu implements Menu {
 		MainMenuOptions menuOptions[] = MainMenuOptions.values();
 		
 		int userInput = 0;
-		log.info("Welcome To The Banking System");
+		log.info("Welcome To Systematic Banking Inc");
 		do {
 			try {
 				MenuHelper.printMenuOptions(menuOptions);

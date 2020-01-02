@@ -157,7 +157,7 @@ public class BankingSystem {
 	}
 
 	// Given a money transfer id the money will transfer from one account to another
-	public boolean acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
+	public MoneyTransfer acceptMoneyTransfer(final int transferId) throws BankingSystemException, LibraryException, DatabaseException {
 		MoneyTransfer transfer = moneyTransferDAO.acceptMoneyTransfer(transferId);
 		if(transfer == null) {
 			throw new DatabaseException("Error Could Not Process Money Transfer");
@@ -165,9 +165,9 @@ public class BankingSystem {
 		double withdrawalAmount = makeWithdrawal(transfer.getSourceAccountNumber() , transfer.getAmount());
 		boolean successfulDeposit = makeDeposit(transfer.getDestinationAccountNumber(), transfer.getAmount());
 		if(withdrawalAmount >= 0 && successfulDeposit) {
-			return true;
+			return transfer;
 		}
-		return false;
+		return null;
 		
 	}
 	

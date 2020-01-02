@@ -68,6 +68,44 @@ public class MoneyTransfer {
 		return "Money Transfer ID: [" + id + "] Source Account Number: [" + sourceAccountNumber
 				+ "] Destination Account Number : [" + destinationAccountNumber + "] Amount: [$" + amount + "] State: [" + state + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(amount);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + destinationAccountNumber;
+		result = prime * result + id;
+		result = prime * result + sourceAccountNumber;
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MoneyTransfer other = (MoneyTransfer) obj;
+		if (Double.doubleToLongBits(amount) != Double.doubleToLongBits(other.amount))
+			return false;
+		if (destinationAccountNumber != other.destinationAccountNumber)
+			return false;
+		if (id != other.id)
+			return false;
+		if (sourceAccountNumber != other.sourceAccountNumber)
+			return false;
+		if (state != other.state)
+			return false;
+		return true;
+	}
+	
+	
 	
 	
 	

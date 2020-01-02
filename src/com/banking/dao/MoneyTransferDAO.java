@@ -75,7 +75,9 @@ public class MoneyTransferDAO {
 					temp.setAmount(moneyTransferResults.getDouble("amount"));
 					temp.setId(moneyTransferResults.getInt("transfer_id"));
 					temp.setState(MoneyTransferState.fromInt(moneyTransferResults.getInt("state")));
-					moneyTransfers.add(temp);
+					if(!moneyTransfers.contains(temp)) {
+						moneyTransfers.add(temp);						
+					}
 				}
 			}
 		}catch(ClassNotFoundException e) {
