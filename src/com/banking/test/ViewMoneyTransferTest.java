@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.banking.bo.BankAccount;
 import com.banking.bo.BankingSystem;
 import com.banking.bo.MoneyTransfer;
 import com.banking.exception.DatabaseException;

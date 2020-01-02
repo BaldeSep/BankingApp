@@ -1,0 +1,20 @@
+2020-01-01 21:03:19 INFO  MainMenu:27 - Welcome To Systematic Banking Inc
+2020-01-01 21:03:19 INFO  MenuHelper:21 - 0) Login
+2020-01-01 21:03:19 INFO  MenuHelper:21 - 1) Register
+2020-01-01 21:03:19 INFO  MenuHelper:21 - 2) Quit
+2020-01-01 21:03:19 INFO  MenuHelper:23 - Enter Any Number Between 0 - 2 Below
+2020-01-01 21:03:21 INFO  MenuHelper:21 - 0) Enter_Credentials
+2020-01-01 21:03:21 INFO  MenuHelper:21 - 1) Go_Back
+2020-01-01 21:03:21 INFO  MenuHelper:21 - 2) Quit
+2020-01-01 21:03:21 INFO  MenuHelper:23 - Enter Any Number Between 0 - 2 Below
+2020-01-01 21:03:23 INFO  LoginMenu:80 - You Have 3 attempts left to Login
+2020-01-01 21:03:23 INFO  LoginMenu:81 - Enter User Name Below
+2020-01-01 21:03:25 INFO  LoginMenu:83 - Enter Password Below
+2020-01-01 21:03:28 INFO  EmployeeMenu:32 - Hello admin
+2020-01-01 21:03:28 INFO  MenuHelper:21 - 0) Logout
+2020-01-01 21:03:28 INFO  MenuHelper:21 - 1) View_Customer_Bank_Account
+2020-01-01 21:03:28 INFO  MenuHelper:21 - 2) View_Log_Of_Transactions
+2020-01-01 21:03:28 INFO  MenuHelper:21 - 3) Evaluate_Account_Applications
+2020-01-01 21:03:28 INFO  MenuHelper:21 - 4) Quit
+2020-01-01 21:03:28 INFO  MenuHelper:23 - Enter Any Number Between 0 - 4 Below
+2020-01-01 21:03:30 INFO  QuitMenu:20 - Shutting System Down Have A Good Day!!! :) 

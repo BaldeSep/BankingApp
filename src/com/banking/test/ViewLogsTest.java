@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.banking.bo.BankingSystem;
 import com.banking.bo.MoneyTransferLog;
 import com.banking.bo.OneWayLog;
-import com.banking.bo.OneWayTransaction;
 import com.banking.dao.MoneyTransferTransactionDAO;
 import com.banking.exception.DatabaseException;
 import com.banking.exception.LibraryException;
